@@ -23,6 +23,7 @@ public class Home extends JFrame {
 				try {
 					Home frame = new Home();
 					frame.setVisible(true);
+					// pendiente
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
