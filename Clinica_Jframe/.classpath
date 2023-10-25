@@ -6,12 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/USUARIO/Desktop/EXTENCION/mysql-connector-java-5.1.47.jar">
+	<classpathentry kind="lib" path="C:/Users/Marcos/Downloads/jBCrypt-0.4.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/USUARIO/Downloads/jBCrypt-0.4.jar">
+	<classpathentry kind="lib" path="C:/Users/Marcos/Downloads/mysql-connector-java-8.0.25.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
