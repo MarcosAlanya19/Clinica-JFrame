@@ -219,11 +219,13 @@ public class RegisterAdm extends JFrame {
 				String dni = dniField.getText();
 				String phone = phoneField.getText();
 				String email = emailField.getText();
+				
 				String password = String.valueOf(passwordField.getPassword());
-				String selectedGender = (String) genderSelect.getSelectedItem();
-				String genderMapping = "Masculino".equals(selectedGender) ? "Male" : "Female";
 				String hashedPassword = hashPassword(password);
 				String verifyPassword = String.valueOf(verifyPasswordField.getPassword());
+				
+				String selectedGender = (String) genderSelect.getSelectedItem();
+				String genderMapping = "Masculino".equals(selectedGender) ? "Male" : "Female";
 
 				try {
 					if (name.isEmpty() || lastname.isEmpty() || dni.isEmpty() || phone.isEmpty() || email.isEmpty()
@@ -236,7 +238,6 @@ public class RegisterAdm extends JFrame {
 
 						if (matcher.matches()) {
 							if (password.equals(verifyPassword)) {
-
 								String query = "INSERT INTO administrative (name, lastname, dni, phone, email, password, gender) VALUES (?,?,?,?,?,?,?)";
 								PreparedStatement st = connect.prepareStatement(query);
 								st.setString(1, name);
@@ -247,8 +248,8 @@ public class RegisterAdm extends JFrame {
 								st.setString(6, hashedPassword);
 								st.setString(7, genderMapping);
 								st.executeUpdate();
-								JOptionPane.showMessageDialog(null, "Registrado");
-								nameField.setText(null);
+								
+								JOptionPane.showMessageDialog(null, "Administrador registrado correctamente");
 								lastnameField.setText(null);
 								dniField.setText(null);
 								phoneField.setText(null);
@@ -256,7 +257,6 @@ public class RegisterAdm extends JFrame {
 								passwordField.setText(null);
 								verifyPasswordField.setText(null);
 							} else {
-
 								JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
 							}
 						} else {

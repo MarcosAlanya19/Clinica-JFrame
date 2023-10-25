@@ -60,6 +60,7 @@ public class Login extends JFrame {
 		contentPane.add(usernameField);
 		usernameField.setColumns(10);
 
+		// test
 		JButton LoginBtn = new JButton("Iniciar sesión");
 		LoginBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
