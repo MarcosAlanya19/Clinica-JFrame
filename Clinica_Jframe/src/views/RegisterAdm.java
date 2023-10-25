@@ -18,6 +18,8 @@ import javax.swing.border.EmptyBorder;
 
 import model.DBConnection;
 import javax.swing.JPasswordField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegisterAdm extends JFrame {
 
@@ -67,21 +69,100 @@ public class RegisterAdm extends JFrame {
 		contentPane.setLayout(null);
 		
 		nameField = new JTextField();
+		nameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				try {
+					int key = e.getKeyChar();
+
+			    boolean mayusculas = key >= 65 && key <= 90;
+			    boolean minusculas = key >= 97 && key <= 122;
+			    boolean espacio = key == 32;
+			            
+			     if (!(minusculas || mayusculas || espacio))
+			    {
+			        e.consume();
+			    }
+				}catch(Exception c) {
+				}
+				
+			}
+		});
 		nameField.setBounds(215, 81, 138, 20);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		
 		lastnameField = new JTextField();
+		lastnameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+			    boolean mayusculas = key >= 65 && key <= 90;
+			    boolean minusculas = key >= 97 && key <= 122;
+			    boolean espacio = key == 32;
+			            
+			     if (!(minusculas || mayusculas || espacio))
+			    {
+			        e.consume();
+			    }
+				}catch(Exception c) {
+				}
+			}
+		});
 		lastnameField.setColumns(10);
 		lastnameField.setBounds(215, 120, 138, 20);
 		contentPane.add(lastnameField);
 		
 		dniField = new JTextField();
+		dniField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+			    boolean numeros = key >= 48 && key <= 57;
+			        
+			    if (!numeros)
+			    {
+			        e.consume();
+			    }
+
+			    if (dniField.getText().trim().length() == 8) {
+			        e.consume();
+			    }
+				}catch(Exception b) {
+				}
+			}
+		});
 		dniField.setColumns(10);
 		dniField.setBounds(267, 188, 86, 20);
 		contentPane.add(dniField);
 		
 		phoneField = new JTextField();
+		phoneField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				try {
+					int key = e.getKeyChar();
+
+			    boolean numeros = key >= 48 && key <= 57;
+			        
+			    if (!numeros)
+			    {
+			        e.consume();
+			    }
+
+			    if (phoneField.getText().trim().length() == 9) {
+			        e.consume();
+			    }
+				}catch(Exception b) {
+				}
+			}
+		});
 		phoneField.setColumns(10);
 		phoneField.setBounds(267, 219, 86, 20);
 		contentPane.add(phoneField);
@@ -137,6 +218,7 @@ public class RegisterAdm extends JFrame {
 				String dni = dniField.getText();
 				String phone = phoneField.getText();
 				String email = emailField.getText();
+				@SuppressWarnings("deprecation")
 				String password = passwordField.getText();
 				String selectedGender = (String) genderSelect.getSelectedItem();
 				String genderMapping = "Masculino".equals(selectedGender) ? "Male" : "Female";
