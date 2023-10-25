@@ -7,10 +7,10 @@
   import javax.swing.JOptionPane;
   
   public class DBConnection {
-  	private static final String DATABASE_NAME = "clinica-del-pilar";
+  	private static final String DATABASE_NAME = "clinica_del_pilar";
   	private static final String SERVER_URL = "jdbc:mysql://localhost:3306/" + DATABASE_NAME;
   	private static final String USER = "root";
-  	private static final String PASSWORD = "root";
+  	private static final String PASSWORD = "";
   
   	public static Connection getConnection() {
   		Connection connection = null;
