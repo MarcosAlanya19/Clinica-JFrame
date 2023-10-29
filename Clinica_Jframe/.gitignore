@@ -1,3 +1,2 @@
 /bin/
-/src/model/
-.classpath
+/src/appConfig/AppConfig.java
