@@ -27,6 +27,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import model.DBConnection;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
+import java.awt.Color;
+import java.awt.Font;
 
 public class RegisterAdm extends JFrame {
 
@@ -65,12 +67,15 @@ public class RegisterAdm extends JFrame {
 	 * Create the frame.
 	 */
 	public RegisterAdm() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterAdm.class.getResource("/img/sitio-web.png")));
+		setBackground(new Color(255, 255, 255));
+		setIconImage(
+				Toolkit.getDefaultToolkit().getImage(RegisterAdm.class.getResource("/img/logo.png")));
 		connect = DBConnection.getConnection();
-		setTitle("RegisterAdm");
+		setTitle("Registro de Administrador");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 464);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(239, 248, 252));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -96,7 +101,7 @@ public class RegisterAdm extends JFrame {
 
 			}
 		});
-		nameField.setBounds(185, 81, 168, 20);
+		nameField.setBounds(185, 92, 168, 20);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 
@@ -119,7 +124,7 @@ public class RegisterAdm extends JFrame {
 			}
 		});
 		lastnameField.setColumns(10);
-		lastnameField.setBounds(185, 120, 168, 20);
+		lastnameField.setBounds(185, 123, 168, 20);
 		contentPane.add(lastnameField);
 
 		dniField = new JTextField();
@@ -143,7 +148,7 @@ public class RegisterAdm extends JFrame {
 			}
 		});
 		dniField.setColumns(10);
-		dniField.setBounds(267, 191, 86, 20);
+		dniField.setBounds(185, 191, 168, 20);
 		contentPane.add(dniField);
 
 		phoneField = new JTextField();
@@ -168,7 +173,7 @@ public class RegisterAdm extends JFrame {
 			}
 		});
 		phoneField.setColumns(10);
-		phoneField.setBounds(267, 222, 86, 20);
+		phoneField.setBounds(185, 222, 168, 20);
 		contentPane.add(phoneField);
 
 		emailField = new JTextField();
@@ -177,44 +182,54 @@ public class RegisterAdm extends JFrame {
 		contentPane.add(emailField);
 
 		JLabel lblNewLabel = new JLabel("Nombre:");
-		lblNewLabel.setBounds(82, 84, 66, 14);
+		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel.setBounds(82, 92, 66, 20);
 		contentPane.add(lblNewLabel);
 
 		JLabel lblLastname = new JLabel("Apellidos:");
-		lblLastname.setBounds(82, 123, 66, 14);
+		lblLastname.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblLastname.setBounds(82, 123, 66, 20);
 		contentPane.add(lblLastname);
 
 		JLabel lblGender = new JLabel("Genero:");
-		lblGender.setBounds(82, 166, 46, 14);
+		lblGender.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblGender.setBounds(82, 158, 86, 20);
 		contentPane.add(lblGender);
 
 		JLabel lblDni = new JLabel("DNI:");
-		lblDni.setBounds(82, 197, 46, 14);
+		lblDni.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblDni.setBounds(82, 191, 46, 20);
 		contentPane.add(lblDni);
 
 		JLabel lblPhone = new JLabel("Celular:");
-		lblPhone.setBounds(82, 228, 46, 14);
+		lblPhone.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblPhone.setBounds(82, 222, 66, 20);
 		contentPane.add(lblPhone);
 
 		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setBounds(82, 259, 46, 14);
+		lblEmail.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblEmail.setBounds(82, 253, 46, 20);
 		contentPane.add(lblEmail);
 
-		JLabel lblPassword = new JLabel("Contraseña");
-		lblPassword.setBounds(82, 290, 86, 14);
+		JLabel lblPassword = new JLabel("Contraseña:");
+		lblPassword.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblPassword.setBounds(82, 284, 94, 20);
 		contentPane.add(lblPassword);
 
 		JLabel lblNewLabel_1 = new JLabel("REGISTRO");
-		lblNewLabel_1.setBounds(190, 37, 56, 22);
+		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 30));
+		lblNewLabel_1.setBounds(123, 28, 156, 31);
 		contentPane.add(lblNewLabel_1);
 
 		JComboBox<String> genderSelect = new JComboBox<String>();
+		genderSelect.setFont(new Font("Arial", Font.PLAIN, 11));
 		genderSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Masculino", "Femenino" }));
 		genderSelect.setToolTipText("");
-		genderSelect.setBounds(267, 155, 86, 22);
+		genderSelect.setBounds(185, 155, 168, 22);
 		contentPane.add(genderSelect);
 
-		JButton RegisterButton = new JButton("Registrar");
+		JButton RegisterButton = new JButton("REGISTRAR");
+		RegisterButton.setFont(new Font("Arial", Font.BOLD, 11));
 		RegisterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
@@ -237,9 +252,11 @@ public class RegisterAdm extends JFrame {
 					} else {
 						if (dni.length() != 8) {
 							JOptionPane.showMessageDialog(null, "El DNI es incorrecto. asegurese de ingresar datos reales");
+							return;
 						}
 						if (phone.length() != 9) {
 							JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
+							return;
 						}
 
 						else {
@@ -248,8 +265,9 @@ public class RegisterAdm extends JFrame {
 							Matcher matcher = pattern.matcher(email);
 
 							if (matcher.matches()) {
-								if (dniExisteEnBD(dni)) {
+								if (dniExist(dni)) {
 									JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
+									return;
 								} else {
 									if (password.equals(verifyPassword)) {
 										String query = "INSERT INTO administrative (name, lastname, dni, phone, email, password, gender) VALUES (?,?,?,?,?,?,?)";
@@ -287,26 +305,16 @@ public class RegisterAdm extends JFrame {
 				}
 			}
 
-			private boolean dniExisteEnBD(String dni) {
-				Connection conn = null;
+			private boolean dniExist(String dni) {
 				try {
-					conn = DBConnection.getConnection();
 					String sql = "SELECT dni FROM administrative WHERE dni = ?";
-					PreparedStatement statement = conn.prepareStatement(sql);
+					PreparedStatement statement = connect.prepareStatement(sql);
 					statement.setString(1, dni);
 					ResultSet result = statement.executeQuery();
-					return result.next(); // Devuelve true si ya existe un registro con ese DNI
+					return result.next();
 				} catch (Exception e) {
 					e.printStackTrace();
 					return false;
-				} finally {
-					try {
-						if (conn != null) {
-							conn.close();
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 				}
 			}
 
@@ -314,24 +322,26 @@ public class RegisterAdm extends JFrame {
 
 		);
 
-		RegisterButton.setBounds(185, 373, 89, 23);
+		RegisterButton.setBounds(167, 375, 112, 23);
 		contentPane.add(RegisterButton);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(267, 284, 86, 20);
+		passwordField.setBounds(185, 284, 168, 20);
 		contentPane.add(passwordField);
 
 		verifyPasswordField = new JPasswordField();
-		verifyPasswordField.setBounds(267, 315, 86, 20);
+		verifyPasswordField.setBounds(185, 315, 168, 20);
 		contentPane.add(verifyPasswordField);
 
 		JLabel lblNewLabel_2 = new JLabel("Validacion:");
-		lblNewLabel_2.setBounds(82, 321, 66, 14);
+		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_2.setBounds(82, 315, 86, 20);
 		contentPane.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setIcon(new ImageIcon(RegisterAdm.class.getResource("/img/codigo-pin.png")));
-		lblNewLabel_3.setBounds(257, 24, 29, 34);
+		lblNewLabel_3.setBackground(new Color(0, 128, 255));
+		lblNewLabel_3.setIcon(new ImageIcon(RegisterAdm.class.getResource("/img/user.png")));
+		lblNewLabel_3.setBounds(289, 28, 29, 31);
 		contentPane.add(lblNewLabel_3);
 	}
 
