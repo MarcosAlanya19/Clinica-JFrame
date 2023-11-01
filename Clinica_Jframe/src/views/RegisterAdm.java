@@ -219,63 +219,73 @@ public class RegisterAdm extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
 				String lastname = lastnameField.getText();
-				String dni = dniField.getText();
-				String phone = phoneField.getText();
-				String email = emailField.getText();
-				
-				String password = String.valueOf(passwordField.getPassword());
-				String hashedPassword = hashPassword(password);
-				String verifyPassword = String.valueOf(verifyPasswordField.getPassword());
-				
-				String selectedGender = (String) genderSelect.getSelectedItem();
-				String genderMapping = "Masculino".equals(selectedGender) ? "Male" : "Female";
+        String dni = dniField.getText();
+        String phone = phoneField.getText();
+        String email = emailField.getText();
+        
+        String password = String.valueOf(passwordField.getPassword());
+        String hashedPassword = hashPassword(password);
+        String verifyPassword = String.valueOf(verifyPasswordField.getPassword());
+        
+        
+        
+        String selectedGender = (String) genderSelect.getSelectedItem();
+        String genderMapping = "Masculino".equals(selectedGender) ? "Male" : "Female";
 
-				try {
-					if (name.isEmpty() || lastname.isEmpty() || dni.isEmpty() || phone.isEmpty() || email.isEmpty()
-							|| password.isEmpty() || verifyPassword.isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
-					} else {
-						String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-						Pattern pattern = Pattern.compile(emailRegex);
-						Matcher matcher = pattern.matcher(email);
+        try {
+            if (name.isEmpty() || lastname.isEmpty() || email.isEmpty() || password.isEmpty() || verifyPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "todos los campos son obligatorios");
+            } else {
+                if (dni.length() != 8) {
+                    JOptionPane.showMessageDialog(null, "El DNI es incorrecto. asegurese de ingresar datos reales");
+                } if (phone.length() != 9) {
+                  JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
+              } 
+                
+                else {
+                    String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+                    Pattern pattern = Pattern.compile(emailRegex);
+                    Matcher matcher = pattern.matcher(email);
 
-						if (matcher.matches()) {
-							if (dniExisteEnBD(dni)) {
-                JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");}else {
-							if (password.equals(verifyPassword)) {
-								String query = "INSERT INTO administrative (name, lastname, dni, phone, email, password, gender) VALUES (?,?,?,?,?,?,?)";
-								PreparedStatement st = connect.prepareStatement(query);
-								st.setString(1, name);
-								st.setString(2, lastname);
-								st.setString(3, dni);
-								st.setString(4, phone);
-								st.setString(5, email);
-								st.setString(6, hashedPassword);
-								st.setString(7, genderMapping);
-								st.executeUpdate();
-								
-								JOptionPane.showMessageDialog(null, "Administrador registrado correctamente");
-								nameField.setText(null);
-								lastnameField.setText(null);
-								dniField.setText(null);
-								phoneField.setText(null);
-								emailField.setText(null);
-								passwordField.setText(null);
-								verifyPasswordField.setText(null);
-							} else {
-								JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
-							}
-						}} else {
-							JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
-							emailField.setText(null);
-						}
-
-					}
-				} catch (Exception err) {
-					err.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error");
-				}
-			}
+                    if (matcher.matches()) {
+                        if (dniExisteEnBD(dni)) {
+                            JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
+                        } else {
+                            if (password.equals(verifyPassword)) {
+                                String query = "INSERT INTO administrative (name, lastname, dni, phone, email, password, gender) VALUES (?,?,?,?,?,?,?)";
+                                PreparedStatement st = connect.prepareStatement(query);
+                                st.setString(1, name);
+                                st.setString(2, lastname);
+                                st.setString(3, dni);
+                                st.setString(4, phone);
+                                st.setString(5, email);
+                                st.setString(6, hashedPassword);
+                                st.setString(7, genderMapping);
+                                st.executeUpdate();
+                                
+                                JOptionPane.showMessageDialog(null, "Administrador registrado correctamente");
+                                nameField.setText(null);
+                                lastnameField.setText(null);
+                                dniField.setText(null);
+                                phoneField.setText(null);
+                                emailField.setText(null);
+                                passwordField.setText(null);
+                                verifyPasswordField.setText(null);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
+                        emailField.setText(null);
+                    }
+                }
+            }
+        } catch (Exception err) {
+            err.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error");
+        }
+    }
 
 			private boolean dniExisteEnBD(String dni) {
 				Connection conn = null;
