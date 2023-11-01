@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,8 @@ import javax.swing.border.EmptyBorder;
 import org.mindrot.jbcrypt.BCrypt;
 
 import model.DBConnection;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 public class RegisterAdm extends JFrame {
 
@@ -62,8 +65,8 @@ public class RegisterAdm extends JFrame {
 	 * Create the frame.
 	 */
 	public RegisterAdm() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterAdm.class.getResource("/img/sitio-web.png")));
 		connect = DBConnection.getConnection();
-		setType(Type.UTILITY);
 		setTitle("RegisterAdm");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 464);
@@ -93,7 +96,7 @@ public class RegisterAdm extends JFrame {
 
 			}
 		});
-		nameField.setBounds(215, 81, 138, 20);
+		nameField.setBounds(185, 81, 168, 20);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 
@@ -116,7 +119,7 @@ public class RegisterAdm extends JFrame {
 			}
 		});
 		lastnameField.setColumns(10);
-		lastnameField.setBounds(215, 120, 138, 20);
+		lastnameField.setBounds(185, 120, 168, 20);
 		contentPane.add(lastnameField);
 
 		dniField = new JTextField();
@@ -140,7 +143,7 @@ public class RegisterAdm extends JFrame {
 			}
 		});
 		dniField.setColumns(10);
-		dniField.setBounds(267, 188, 86, 20);
+		dniField.setBounds(267, 191, 86, 20);
 		contentPane.add(dniField);
 
 		phoneField = new JTextField();
@@ -165,40 +168,40 @@ public class RegisterAdm extends JFrame {
 			}
 		});
 		phoneField.setColumns(10);
-		phoneField.setBounds(267, 219, 86, 20);
+		phoneField.setBounds(267, 222, 86, 20);
 		contentPane.add(phoneField);
 
 		emailField = new JTextField();
 		emailField.setColumns(10);
-		emailField.setBounds(215, 250, 138, 20);
+		emailField.setBounds(185, 253, 168, 20);
 		contentPane.add(emailField);
 
-		JLabel lblNewLabel = new JLabel("Nombre");
-		lblNewLabel.setBounds(110, 87, 46, 14);
+		JLabel lblNewLabel = new JLabel("Nombre:");
+		lblNewLabel.setBounds(82, 84, 66, 14);
 		contentPane.add(lblNewLabel);
 
-		JLabel lblLastname = new JLabel("Apellidos");
-		lblLastname.setBounds(110, 126, 46, 14);
+		JLabel lblLastname = new JLabel("Apellidos:");
+		lblLastname.setBounds(82, 123, 66, 14);
 		contentPane.add(lblLastname);
 
-		JLabel lblGender = new JLabel("Genero");
-		lblGender.setBounds(110, 160, 46, 14);
+		JLabel lblGender = new JLabel("Genero:");
+		lblGender.setBounds(82, 166, 46, 14);
 		contentPane.add(lblGender);
 
-		JLabel lblDni = new JLabel("DNI");
-		lblDni.setBounds(110, 191, 46, 14);
+		JLabel lblDni = new JLabel("DNI:");
+		lblDni.setBounds(82, 197, 46, 14);
 		contentPane.add(lblDni);
 
-		JLabel lblPhone = new JLabel("Celular");
-		lblPhone.setBounds(110, 225, 46, 14);
+		JLabel lblPhone = new JLabel("Celular:");
+		lblPhone.setBounds(82, 228, 46, 14);
 		contentPane.add(lblPhone);
 
-		JLabel lblEmail = new JLabel("Email");
-		lblEmail.setBounds(110, 253, 46, 14);
+		JLabel lblEmail = new JLabel("Email:");
+		lblEmail.setBounds(82, 259, 46, 14);
 		contentPane.add(lblEmail);
 
 		JLabel lblPassword = new JLabel("Contraseña");
-		lblPassword.setBounds(110, 287, 66, 14);
+		lblPassword.setBounds(82, 290, 86, 14);
 		contentPane.add(lblPassword);
 
 		JLabel lblNewLabel_1 = new JLabel("REGISTRO");
@@ -237,6 +240,8 @@ public class RegisterAdm extends JFrame {
 						Matcher matcher = pattern.matcher(email);
 
 						if (matcher.matches()) {
+							if (dniExisteEnBD(dni)) {
+                JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");}else {
 							if (password.equals(verifyPassword)) {
 								String query = "INSERT INTO administrative (name, lastname, dni, phone, email, password, gender) VALUES (?,?,?,?,?,?,?)";
 								PreparedStatement st = connect.prepareStatement(query);
@@ -250,6 +255,7 @@ public class RegisterAdm extends JFrame {
 								st.executeUpdate();
 								
 								JOptionPane.showMessageDialog(null, "Administrador registrado correctamente");
+								nameField.setText(null);
 								lastnameField.setText(null);
 								dniField.setText(null);
 								phoneField.setText(null);
@@ -259,7 +265,7 @@ public class RegisterAdm extends JFrame {
 							} else {
 								JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
 							}
-						} else {
+						}} else {
 							JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
 							emailField.setText(null);
 						}
@@ -271,7 +277,34 @@ public class RegisterAdm extends JFrame {
 				}
 			}
 
-		});
+			private boolean dniExisteEnBD(String dni) {
+				Connection conn = null;
+		    try {
+		        conn = DBConnection.getConnection();
+		        String sql = "SELECT dni FROM administrative WHERE dni = ?";
+		        PreparedStatement statement = conn.prepareStatement(sql);
+		        statement.setString(1, dni);
+		        ResultSet result = statement.executeQuery();
+		        return result.next(); // Devuelve true si ya existe un registro con ese DNI
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return false;
+		    } finally {
+		        try {
+		            if (conn != null) {
+		                conn.close();
+		            }
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
+			}
+
+		}
+		
+		);
+		
+		
 
 		RegisterButton.setBounds(185, 373, 89, 23);
 		contentPane.add(RegisterButton);
@@ -283,9 +316,21 @@ public class RegisterAdm extends JFrame {
 		verifyPasswordField = new JPasswordField();
 		verifyPasswordField.setBounds(267, 315, 86, 20);
 		contentPane.add(verifyPasswordField);
+		
+		JLabel lblNewLabel_2 = new JLabel("Validacion:");
+		lblNewLabel_2.setBounds(82, 321, 66, 14);
+		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon(RegisterAdm.class.getResource("/img/codigo-pin.png")));
+		lblNewLabel_3.setBounds(257, 24, 29, 34);
+		contentPane.add(lblNewLabel_3);
 	}
 
 	private static String hashPassword(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}
+	
 }
+
+
