@@ -29,6 +29,7 @@ import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class RegisterAdm extends JFrame {
 
@@ -73,7 +74,7 @@ public class RegisterAdm extends JFrame {
 		connect = DBConnection.getConnection();
 		setTitle("Registro de Administrador");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 464);
+		setBounds(100, 100, 650, 464);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(239, 248, 252));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -217,8 +218,9 @@ public class RegisterAdm extends JFrame {
 		contentPane.add(lblPassword);
 
 		JLabel lblNewLabel_1 = new JLabel("REGISTRO");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 30));
-		lblNewLabel_1.setBounds(123, 28, 156, 31);
+		lblNewLabel_1.setBounds(214, 34, 208, 31);
 		contentPane.add(lblNewLabel_1);
 
 		JComboBox<String> genderSelect = new JComboBox<String>();
@@ -337,16 +339,14 @@ public class RegisterAdm extends JFrame {
 		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_2.setBounds(82, 315, 86, 20);
 		contentPane.add(lblNewLabel_2);
-
+		
 		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setBackground(new Color(0, 128, 255));
-		lblNewLabel_3.setIcon(new ImageIcon(RegisterAdm.class.getResource("/img/user.png")));
-		lblNewLabel_3.setBounds(289, 28, 29, 31);
+		lblNewLabel_3.setIcon(new ImageIcon(RegisterAdm.class.getResource("/img/Adm.png")));
+		lblNewLabel_3.setBounds(363, 92, 240, 256);
 		contentPane.add(lblNewLabel_3);
 	}
 
 	private static String hashPassword(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}
-
 }
