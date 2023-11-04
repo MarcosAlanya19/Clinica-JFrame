@@ -344,6 +344,24 @@ public class RegisterAdm extends JFrame {
 		lblNewLabel_3.setIcon(new ImageIcon(RegisterAdm.class.getResource("/img/Adm.png")));
 		lblNewLabel_3.setBounds(363, 92, 240, 256);
 		contentPane.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("¿ya tienes una cuenta?");
+		lblNewLabel_2_1.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_2_1.setBounds(302, 375, 157, 20);
+		contentPane.add(lblNewLabel_2_1);
+		
+		JButton btnIniciarSesion = new JButton("INICIAR SESION");
+		btnIniciarSesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Login createWindow = new Login();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		btnIniciarSesion.setFont(new Font("Arial", Font.BOLD, 11));
+		btnIniciarSesion.setBounds(466, 375, 112, 23);
+		contentPane.add(btnIniciarSesion);
 	}
 
 	private static String hashPassword(String password) {
