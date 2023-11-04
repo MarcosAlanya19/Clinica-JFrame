@@ -1,21 +1,21 @@
 package views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.Toolkit;
 import java.awt.Color;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
+import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionListener;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import javax.swing.JMenuItem;
-import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class Home extends JFrame {
 
@@ -54,9 +54,25 @@ public class Home extends JFrame {
 		menuBar.add(mnNewMenu);
 
 		JMenuItem registerPatient = new JMenuItem("PACIENTE");
+		registerPatient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterPatient createWindow = new RegisterPatient();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		mnNewMenu.add(registerPatient);
 
 		JMenuItem registerSpecialist = new JMenuItem("ESPECIALISTA");
+		registerSpecialist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterSpecialist createWindow = new RegisterSpecialist();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		mnNewMenu.add(registerSpecialist);
 
 		JMenuItem registerSpeciality = new JMenuItem("ESPECIALIDAD");
@@ -71,6 +87,14 @@ public class Home extends JFrame {
 		mnNewMenu.add(registerSpeciality);
 
 		JMenuItem registerQuote = new JMenuItem("CITA");
+		registerQuote.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterQuote createWindow = new RegisterQuote();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		mnNewMenu.add(registerQuote);
 
 		JMenu mnMostrar = new JMenu("MOSTRAR");
