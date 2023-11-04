@@ -1,11 +1,17 @@
 package views;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,16 +21,13 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import model.DBConnection;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import java.awt.Toolkit;
-import javax.swing.ImageIcon;
 
 public class RegisterSpeciality extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField nameField;
 	private JTextField descriptionField;
@@ -149,12 +152,27 @@ public class RegisterSpeciality extends JFrame {
 				}
 			}
 		});
-		registerButton.setBounds(125, 210, 123, 19);
+		registerButton.setBounds(57, 211, 123, 19);
 		contentPane.add(registerButton);
 		
 		JLabel lblNewLabel_5 = new JLabel("");
 		lblNewLabel_5.setIcon(new ImageIcon(RegisterSpeciality.class.getResource("/img/speciality.png")));
 		lblNewLabel_5.setBounds(358, 23, 254, 230);
 		contentPane.add(lblNewLabel_5);
+		
+		JButton homeButton = new JButton("INICIO");
+		homeButton.setIcon(new ImageIcon(RegisterSpeciality.class.getResource("/img/home.png")));
+		homeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home createWindow = new Home();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+
+			}
+		});
+		homeButton.setFont(new Font("Arial", Font.BOLD, 14));
+		homeButton.setBounds(229, 211, 119, 21);
+		contentPane.add(homeButton);
 	}
 }
