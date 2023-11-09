@@ -5,18 +5,30 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.DBConnection;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.Toolkit;
+import java.sql.Connection;
 
-public class RegistroHorarios extends JFrame {
+import javax.swing.ImageIcon;
 
+public class RegisterSchedules extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField dayField;
 	private JTextField startField;
 	private JTextField endField;
+	private Connection connect;
 
 	/**
 	 * Launch the application.
@@ -25,7 +37,7 @@ public class RegistroHorarios extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistroHorarios frame = new RegistroHorarios();
+					RegisterSchedules frame = new RegisterSchedules();
 					frame.setVisible(true);
 					frame.setLocationRelativeTo(null);
 				} catch (Exception e) {
@@ -38,7 +50,9 @@ public class RegistroHorarios extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistroHorarios() {
+	public RegisterSchedules() {
+		connect = DBConnection.getConnection();
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterSchedules.class.getResource("/img/logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
 		contentPane = new JPanel();
@@ -69,17 +83,17 @@ public class RegistroHorarios extends JFrame {
 		contentPane.add(lblNewLabel_1_2);
 		
 		dayField = new JTextField();
-		dayField.setBounds(162, 111, 123, 19);
+		dayField.setBounds(132, 111, 153, 19);
 		contentPane.add(dayField);
 		dayField.setColumns(10);
 		
 		startField = new JTextField();
-		startField.setBounds(162, 175, 123, 19);
+		startField.setBounds(132, 175, 153, 19);
 		contentPane.add(startField);
 		startField.setColumns(10);
 		
 		endField = new JTextField();
-		endField.setBounds(162, 241, 123, 19);
+		endField.setBounds(132, 241, 153, 19);
 		contentPane.add(endField);
 		endField.setColumns(10);
 		
@@ -92,6 +106,11 @@ public class RegistroHorarios extends JFrame {
 		backBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		backBtn.setBounds(223, 330, 123, 21);
 		contentPane.add(backBtn);
+		
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(RegisterSchedules.class.getResource("/img/appointmentSchedule.png")));
+		lblNewLabel_2.setBounds(337, 79, 319, 257);
+		contentPane.add(lblNewLabel_2);
 	}
 
 }
