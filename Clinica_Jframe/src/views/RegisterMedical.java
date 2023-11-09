@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-public class RegistroMedico extends JFrame {
+public class RegisterMedical extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -33,7 +33,7 @@ public class RegistroMedico extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistroMedico frame = new RegistroMedico();
+					RegisterMedical frame = new RegisterMedical();
 					frame.setVisible(true);
 					frame.setLocationRelativeTo(null);
 				} catch (Exception e) {
@@ -46,8 +46,8 @@ public class RegistroMedico extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistroMedico() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroMedico.class.getResource("/img/logo.png")));
+	public RegisterMedical() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterMedical.class.getResource("/img/logo.png")));
 		setTitle("CLINICA DEL PILAR");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
@@ -78,7 +78,7 @@ public class RegistroMedico extends JFrame {
 		contentPane.add(asignarRecursosBtn);
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(RegistroMedico.class.getResource("/img/regismedico.png")));
+		lblNewLabel.setIcon(new ImageIcon(RegisterMedical.class.getResource("/img/regismedico.png")));
 		lblNewLabel.setBounds(341, 81, 256, 254);
 		contentPane.add(lblNewLabel);
 		

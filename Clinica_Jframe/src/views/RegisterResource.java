@@ -16,7 +16,7 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 
-public class RegistroRecurso extends JFrame {
+public class RegisterResource extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -30,7 +30,7 @@ public class RegistroRecurso extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistroRecurso frame = new RegistroRecurso();
+					RegisterResource frame = new RegisterResource();
 					frame.setVisible(true);
 					frame.setLocationRelativeTo(null);
 				} catch (Exception e) {
@@ -43,8 +43,8 @@ public class RegistroRecurso extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistroRecurso() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroRecurso.class.getResource("/img/logo.png")));
+	public RegisterResource() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterResource.class.getResource("/img/logo.png")));
 		setTitle("CLINICA DEL PILAR");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
@@ -104,8 +104,9 @@ public class RegistroRecurso extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(RegistroRecurso.class.getResource("/img/recursos.png")));
-		lblNewLabel_2.setBounds(349, 101, 275, 271);
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setIcon(new ImageIcon(RegisterResource.class.getResource("/img/resource.png")));
+		lblNewLabel_2.setBounds(332, 101, 265, 276);
 		contentPane.add(lblNewLabel_2);
 	}
 }

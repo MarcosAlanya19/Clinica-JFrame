@@ -16,7 +16,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 
-public class RegistroHistorialMedico extends JFrame {
+public class RegisterMedicalHistory extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -30,7 +30,7 @@ public class RegistroHistorialMedico extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistroHistorialMedico frame = new RegistroHistorialMedico();
+					RegisterMedicalHistory frame = new RegisterMedicalHistory();
 					frame.setVisible(true);
 					frame.setLocationRelativeTo(null);
 				} catch (Exception e) {
@@ -43,8 +43,8 @@ public class RegistroHistorialMedico extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistroHistorialMedico() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHistorialMedico.class.getResource("/img/logo.png")));
+	public RegisterMedicalHistory() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterMedicalHistory.class.getResource("/img/logo.png")));
 		setTitle("CLINICA DEL PILAR");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
@@ -117,7 +117,7 @@ public class RegistroHistorialMedico extends JFrame {
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setIcon(new ImageIcon(RegistroHistorialMedico.class.getResource("/img/historial.png")));
+		lblNewLabel_3.setIcon(new ImageIcon(RegisterMedicalHistory.class.getResource("/img/history.png")));
 		lblNewLabel_3.setBounds(10, 11, 256, 281);
 		panel_1.add(lblNewLabel_3);
 	}
