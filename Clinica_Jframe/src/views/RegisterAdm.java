@@ -69,8 +69,7 @@ public class RegisterAdm extends JFrame {
 	 */
 	public RegisterAdm() {
 		setBackground(new Color(255, 255, 255));
-		setIconImage(
-				Toolkit.getDefaultToolkit().getImage(RegisterAdm.class.getResource("/img/logo.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterAdm.class.getResource("/img/logo.png")));
 		connect = DBConnection.getConnection();
 		setTitle("Registro de Administrador");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

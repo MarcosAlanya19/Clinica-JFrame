@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegisterMedicalHistory extends JFrame {
 
@@ -73,6 +75,14 @@ public class RegisterMedicalHistory extends JFrame {
 		panel.add(registrarBtn);
 		
 		JButton regresarBtn = new JButton("REGRESAR");
+		regresarBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterPatient createWindow = new RegisterPatient();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		regresarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
 		regresarBtn.setBounds(151, 270, 115, 23);
 		panel.add(regresarBtn);

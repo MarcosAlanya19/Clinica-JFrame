@@ -71,6 +71,10 @@ public class RegisterMedical extends JFrame {
 		JButton asignarRecursosBtn = new JButton("<html>ASIGNAR<br>RECURSOS</html>");
 		asignarRecursosBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterResource createWindow = new RegisterResource();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
 			}
 		});
 		asignarRecursosBtn.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -78,7 +82,7 @@ public class RegisterMedical extends JFrame {
 		contentPane.add(asignarRecursosBtn);
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(RegisterMedical.class.getResource("/img/regismedico.png")));
+		lblNewLabel.setIcon(new ImageIcon(RegisterMedical.class.getResource("/img/registerMedical.png")));
 		lblNewLabel.setBounds(341, 81, 256, 254);
 		contentPane.add(lblNewLabel);
 		
@@ -131,6 +135,10 @@ public class RegisterMedical extends JFrame {
 		JButton asignarHorariosBtn = new JButton("<html>ASIGNAR<br>HORARIOS</html>");
 		asignarHorariosBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterSchedules createWindow = new RegisterSchedules();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
 			}
 		});
 		asignarHorariosBtn.setFont(new Font("Arial", Font.PLAIN, 14));
