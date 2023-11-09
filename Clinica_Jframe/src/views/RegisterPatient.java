@@ -39,6 +39,7 @@ public class RegisterPatient extends JFrame {
 				try {
 					RegisterPatient frame = new RegisterPatient();
 					frame.setVisible(true);
+					frame.setLocationRelativeTo(null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
