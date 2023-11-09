@@ -64,6 +64,14 @@ public class RegisterMedical extends JFrame {
 		contentPane.add(registroBtn);
 		
 		JButton inicioBtn = new JButton("INICIO");
+		inicioBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home createWindow = new Home();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		inicioBtn.setFont(new Font("Arial", Font.PLAIN, 14));
 		inicioBtn.setBounds(210, 274, 89, 23);
 		contentPane.add(inicioBtn);
