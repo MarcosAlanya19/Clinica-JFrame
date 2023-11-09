@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class Registro extends JFrame {
 
@@ -68,7 +70,7 @@ public class Registro extends JFrame {
 			}
 		});
 		registroBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-		registroBtn.setBounds(132, 238, 126, 23);
+		registroBtn.setBounds(148, 266, 126, 23);
 		contentPane.add(registroBtn);
 		
 		JButton inicioBtn = new JButton("INICIA SESION");
@@ -126,5 +128,18 @@ public class Registro extends JFrame {
 		lblPasword.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblPasword.setBounds(68, 191, 84, 23);
 		contentPane.add(lblPasword);
+		
+		JLabel lblCargo = new JLabel("Cargo:");
+		lblCargo.setHorizontalAlignment(SwingConstants.LEFT);
+		lblCargo.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblCargo.setBounds(68, 223, 84, 23);
+		contentPane.add(lblCargo);
+		
+		JComboBox<String> genderSelect = new JComboBox<String>();
+		genderSelect.setFont(new Font("Arial", Font.PLAIN, 11));
+		genderSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Administrador", "Medico" }));
+		genderSelect.setToolTipText("");
+		genderSelect.setBounds(185, 155, 168, 22);
+		contentPane.add(genderSelect);
 	}
 }
