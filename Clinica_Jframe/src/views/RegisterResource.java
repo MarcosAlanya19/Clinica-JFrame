@@ -15,6 +15,8 @@ import javax.swing.JComboBox;
 import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegisterResource extends JFrame {
 
@@ -61,6 +63,14 @@ public class RegisterResource extends JFrame {
 		contentPane.add(registroBtn);
 		
 		JButton regresarBtn = new JButton("REGRESAR");
+		regresarBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterMedical createWindow = new RegisterMedical();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		regresarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
 		regresarBtn.setBounds(185, 263, 123, 23);
 		contentPane.add(regresarBtn);

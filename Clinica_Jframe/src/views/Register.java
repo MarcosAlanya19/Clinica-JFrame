@@ -115,7 +115,7 @@ public class Register extends JFrame {
 				
 				if (matcher.matches()) {
 					if (emailExist(email)) {
-						JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
+						JOptionPane.showMessageDialog(null, "El email ya ha sido registrado. Por favor, ingrese otro email.");
 						return;}
 				}
 				
