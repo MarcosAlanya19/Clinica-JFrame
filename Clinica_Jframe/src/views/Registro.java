@@ -1,22 +1,32 @@
 package views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
 import java.awt.Color;
-import javax.swing.JComboBox;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import org.mindrot.jbcrypt.BCrypt;
+
+import model.DBConnection;
 
 public class Registro extends JFrame {
 
@@ -25,6 +35,7 @@ public class Registro extends JFrame {
 	private JTextField nameField;
 	private JTextField emailField;
 	private JTextField passwordField;
+	private Connection connect;
 
 	/**
 	 * Launch the application.
@@ -47,6 +58,8 @@ public class Registro extends JFrame {
 	 * Create the frame.
 	 */
 	public Registro() {
+		connect = DBConnection.getConnection();
+		
 		setTitle("CLINICA DEL PILAR");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Registro.class.getResource("/img/logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,30 +70,6 @@ public class Registro extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("REGISTRO");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
-		lblNewLabel.setBounds(181, 11, 273, 71);
-		contentPane.add(lblNewLabel);
-		
-		JButton registroBtn = new JButton("REGISTRO");
-		registroBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		registroBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-		registroBtn.setBounds(148, 266, 126, 23);
-		contentPane.add(registroBtn);
-		
-		JButton inicioBtn = new JButton("INICIA SESION");
-		inicioBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		inicioBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-		inicioBtn.setBounds(405, 362, 126, 23);
-		contentPane.add(inicioBtn);
 		
 		JLabel lblNewLabel_1 = new JLabel("¿Ya tienes una cuenta?");
 		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -141,5 +130,100 @@ public class Registro extends JFrame {
 		postSelect.setToolTipText("");
 		postSelect.setBounds(168, 223, 181, 22);
 		contentPane.add(postSelect);
+		
+		JLabel lblNewLabel = new JLabel("REGISTRO");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
+		lblNewLabel.setBounds(181, 11, 273, 71);
+		contentPane.add(lblNewLabel);
+		
+		JButton registroBtn = new JButton("REGISTRO");
+		registroBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = nameField.getText();
+				String email = emailField.getText();
+
+				String password = String.valueOf(passwordField.getText());
+				String hashedPassword = hashPassword(password);
+				// String verifyPassword = String.valueOf(verifyPasswordField.getPassword());
+
+				String selectedRol = (String) postSelect.getSelectedItem();
+				
+				if (name.isEmpty() || email.isEmpty() || password.isEmpty() || selectedRol.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
+					return;
+				}
+				
+				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+				Pattern pattern = Pattern.compile(emailRegex);
+				Matcher matcher = pattern.matcher(email);
+
+				if (!matcher.matches()) {
+					JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
+					emailField.setText(null);
+					return;
+				}
+				
+				if (emailExist(email)) {
+					JOptionPane.showMessageDialog(null, "El email ya ha sido registrado. Por favor, ingrese otro DNI.");
+					emailField.setText(null);
+					return;
+				}
+				
+				try {
+					String query = "INSERT INTO User (name, email, password, rol) VALUES (?,?,?,?)";
+					PreparedStatement st = connect.prepareStatement(query);
+					st.setString(1, name);
+					st.setString(5, email);
+					st.setString(6, hashedPassword);
+					st.setString(7, selectedRol);
+					st.executeUpdate();
+					
+					System.out.println(selectedRol);
+
+					JOptionPane.showMessageDialog(null, "Usuario registrado correctamente");
+					nameField.setText(null);
+					emailField.setText(null);
+					passwordField.setText(null);
+				} catch (Exception err) {
+					err.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error en el servidor");
+				}
+			}
+		});
+		registroBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		registroBtn.setBounds(148, 266, 126, 23);
+		contentPane.add(registroBtn);
+		
+		JButton inicioBtn = new JButton("INICIA SESION");
+		inicioBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Login createWindow = new Login();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		inicioBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		inicioBtn.setBounds(405, 362, 126, 23);
+		contentPane.add(inicioBtn);
+	
+	}
+	
+	private static String hashPassword(String password) {
+		return BCrypt.hashpw(password, BCrypt.gensalt());
+	}
+	
+	private boolean emailExist(String email) {
+		try {
+			String sql = "SELECT email FROM administrative WHERE email = ?";
+			PreparedStatement statement = connect.prepareStatement(sql);
+			statement.setString(1, email);
+			ResultSet result = statement.executeQuery();
+			return result.next();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
 
 public class Home extends JFrame {
 
@@ -50,33 +51,11 @@ public class Home extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("REGISTROS");
+		JMenu mnNewMenu = new JMenu("PACIENTE");
 		menuBar.add(mnNewMenu);
 
-		JMenuItem registerPatient = new JMenuItem("PACIENTE");
-		registerPatient.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				RegisterPatient createWindow = new RegisterPatient();
-				createWindow.setLocationRelativeTo(null);
-				createWindow.setVisible(true);
-			}
-		});
-		mnNewMenu.add(registerPatient);
-
-		JMenuItem registerSpecialist = new JMenuItem("ESPECIALISTA");
-		registerSpecialist.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				RegisterSpecialist createWindow = new RegisterSpecialist();
-				createWindow.setLocationRelativeTo(null);
-				createWindow.setVisible(true);
-			}
-		});
-		mnNewMenu.add(registerSpecialist);
-
-		JMenuItem registerSpeciality = new JMenuItem("ESPECIALIDAD");
-		registerSpeciality.addActionListener(new ActionListener() {
+		JMenuItem showPatient = new JMenuItem("Ver");
+		showPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				RegisterSpeciality createWindow = new RegisterSpeciality();
@@ -84,10 +63,10 @@ public class Home extends JFrame {
 				createWindow.setVisible(true);
 			}
 		});
-		mnNewMenu.add(registerSpeciality);
+		mnNewMenu.add(showPatient);
 
-		JMenuItem registerQuote = new JMenuItem("CITA");
-		registerQuote.addActionListener(new ActionListener() {
+		JMenuItem registerPatient = new JMenuItem("Registro");
+		registerPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				RegisterQuote createWindow = new RegisterQuote();
@@ -95,22 +74,33 @@ public class Home extends JFrame {
 				createWindow.setVisible(true);
 			}
 		});
-		mnNewMenu.add(registerQuote);
+		mnNewMenu.add(registerPatient);
 
-		JMenu mnMostrar = new JMenu("MOSTRAR");
+		JMenu mnMostrar = new JMenu("MEDICO");
 		menuBar.add(mnMostrar);
 
-		JMenuItem showPatient = new JMenuItem("PACIENTE");
-		mnMostrar.add(showPatient);
+		JMenuItem showDoctor = new JMenuItem("Ver");
+		mnMostrar.add(showDoctor);
 
-		JMenuItem showSpecialist = new JMenuItem("ESPECIALISTA");
-		mnMostrar.add(showSpecialist);
-
-		JMenuItem showSpeciality = new JMenuItem("ESPECIALIDAD");
-		mnMostrar.add(showSpeciality);
-
-		JMenuItem showQuote = new JMenuItem("CITA");
-		mnMostrar.add(showQuote);
+		JMenuItem registerDoctor = new JMenuItem("Registro");
+		registerDoctor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegistroMedico createWindow = new RegistroMedico();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		mnMostrar.add(registerDoctor);
+		
+		JMenu mnNewMenu_1 = new JMenu("FACTURA");
+		menuBar.add(mnNewMenu_1);
+		
+		JMenuItem showInvoice = new JMenuItem("Ver");
+		mnNewMenu_1.add(showInvoice);
+		
+		JMenuItem registerInvoice = new JMenuItem("Registro");
+		mnNewMenu_1.add(registerInvoice);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(239, 248, 252));
 		contentPane.setForeground(new Color(239, 248, 252));
@@ -122,25 +112,30 @@ public class Home extends JFrame {
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setIcon(new ImageIcon(Home.class.getResource("/img/clinicaSMP.png")));
-		lblNewLabel.setBounds(357, 21, 250, 239);
+		lblNewLabel.setBounds(362, 21, 250, 239);
 		contentPane.add(lblNewLabel);
 
 		JLabel lblNewLabel_1 = new JLabel("Bienvenido");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 30));
-		lblNewLabel_1.setBounds(21, 57, 338, 58);
+		lblNewLabel_1.setBounds(20, 39, 327, 58);
 		contentPane.add(lblNewLabel_1);
-
-		JLabel lblNewLabel_1_1 = new JLabel("al aplicativo \r\nde la");
-		lblNewLabel_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1_1.setFont(new Font("Arial", Font.BOLD, 30));
-		lblNewLabel_1_1.setBounds(21, 110, 338, 52);
-		contentPane.add(lblNewLabel_1_1);
 
 		JLabel lblNewLabel_1_1_1 = new JLabel("CLINICA DEL PILAR");
 		lblNewLabel_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1_1_1.setFont(new Font("Arial", Font.BOLD, 30));
-		lblNewLabel_1_1_1.setBounds(21, 162, 338, 58);
+		lblNewLabel_1_1_1.setBounds(20, 88, 329, 58);
 		contentPane.add(lblNewLabel_1_1_1);
+		
+		JButton reigsterQuoteBtn = new JButton("REGISTRO DE CITA");
+		reigsterQuoteBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		reigsterQuoteBtn.setBounds(20, 183, 329, 23);
+		contentPane.add(reigsterQuoteBtn);
+		
+		JLabel lblNewLabel_2 = new JLabel("Antes de registrar una cita, registrar un paciente y medico.\r\n");
+		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setBounds(20, 217, 326, 35);
+		contentPane.add(lblNewLabel_2);
 	}
 }
