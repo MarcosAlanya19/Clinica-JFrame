@@ -134,6 +134,8 @@ public class Register extends JFrame {
 					nameField.setText(null);
 					emailField.setText(null);
 					passwordField.setText(null);
+					passwordVerifyField.setText(null); 
+					
 				} catch (Exception err) {
 					err.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error en el servidor");
@@ -147,7 +149,7 @@ public class Register extends JFrame {
 
 			private boolean emailExist(String email) {
 				try {
-					String sql = "SELECT dni FROM administrative WHERE dni = ?";
+					String sql = "SELECT email FROM admin WHERE email = ?";
 					PreparedStatement statement = connect.prepareStatement(sql);
 					statement.setString(1, email);
 					ResultSet result = statement.executeQuery();

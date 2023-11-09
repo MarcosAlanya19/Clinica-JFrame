@@ -85,7 +85,7 @@ public class Login extends JFrame {
 				String password = new String(passwordChars);
 
 				try {
-					String query = "SELECT id, email, password FROM administrative WHERE email = ?";
+					String query = "SELECT id, email, password FROM admin WHERE email = ?";
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, username);
 
