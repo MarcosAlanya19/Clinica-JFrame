@@ -94,7 +94,7 @@ public class RegistroHistorialMedico extends JFrame {
 		panel.add(lblDescription);
 		
 		ageField = new JTextField();
-		ageField.setBounds(76, 109, 190, 20);
+		ageField.setBounds(96, 109, 170, 20);
 		panel.add(ageField);
 		ageField.setColumns(10);
 		
@@ -107,7 +107,7 @@ public class RegistroHistorialMedico extends JFrame {
 		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		bloodTypeSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "A", "B", "AB", "Desconocido" }));
 		bloodTypeSelect.setToolTipText("");
-		bloodTypeSelect.setBounds(76, 67, 190, 22);
+		bloodTypeSelect.setBounds(96, 67, 170, 22);
 		panel.add(bloodTypeSelect);
 		
 		JPanel panel_1 = new JPanel();
