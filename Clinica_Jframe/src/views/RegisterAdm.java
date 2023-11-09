@@ -258,7 +258,7 @@ public class RegisterAdm extends JFrame {
 				}
 
 				if (phone.length() != 9) {
-					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
+					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar 9 digitos");
 					phoneField.setText(null);
 					return;
 				}
@@ -304,6 +304,8 @@ public class RegisterAdm extends JFrame {
 					emailField.setText(null);
 					passwordField.setText(null);
 					verifyPasswordField.setText(null);
+					
+					
 				} catch (Exception err) {
 					err.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error en el servidor");
