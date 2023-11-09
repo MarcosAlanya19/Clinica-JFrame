@@ -86,7 +86,7 @@ public class Home extends JFrame {
 		registerDoctor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				RegistroMedico createWindow = new RegistroMedico();
+				RegisterMedical createWindow = new RegisterMedical();
 				createWindow.setLocationRelativeTo(null);
 				createWindow.setVisible(true);
 			}
