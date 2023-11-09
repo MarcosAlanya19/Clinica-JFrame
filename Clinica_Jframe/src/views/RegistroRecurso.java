@@ -13,14 +13,15 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Color;
+import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 
 public class RegistroRecurso extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_3;
+	private JTextField nameField;
+	private JTextField statusField;
 
 	/**
 	 * Launch the application.
@@ -54,57 +55,57 @@ public class RegistroRecurso extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnNewButton = new JButton("REGISTRO");
-		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnNewButton.setBounds(62, 296, 105, 23);
-		contentPane.add(btnNewButton);
+		JButton registroBtn = new JButton("REGISTRO");
+		registroBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		registroBtn.setBounds(42, 263, 115, 23);
+		contentPane.add(registroBtn);
 		
-		JButton btnRecurso = new JButton("RECURSO");
-		btnRecurso.setFont(new Font("Arial", Font.PLAIN, 14));
-		btnRecurso.setBounds(205, 296, 105, 23);
-		contentPane.add(btnRecurso);
+		JButton regresarBtn = new JButton("REGRESAR");
+		regresarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		regresarBtn.setBounds(185, 263, 123, 23);
+		contentPane.add(regresarBtn);
 		
 		JLabel lblNewLabel = new JLabel("Nombre:");
 		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel.setBounds(62, 86, 65, 14);
+		lblNewLabel.setBounds(42, 157, 65, 14);
 		contentPane.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(155, 80, 173, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		nameField = new JTextField();
+		nameField.setBounds(135, 151, 173, 20);
+		contentPane.add(nameField);
+		nameField.setColumns(10);
 		
 		JLabel lblEstado = new JLabel("Estado:");
 		lblEstado.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblEstado.setBounds(62, 114, 65, 14);
+		lblEstado.setBounds(42, 185, 65, 14);
 		contentPane.add(lblEstado);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(155, 108, 173, 20);
-		contentPane.add(textField_1);
+		statusField = new JTextField();
+		statusField.setColumns(10);
+		statusField.setBounds(135, 179, 173, 20);
+		contentPane.add(statusField);
 		
 		JLabel lblDisponibilidad = new JLabel("Disponibilidad:");
 		lblDisponibilidad.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblDisponibilidad.setBounds(62, 142, 105, 14);
+		lblDisponibilidad.setBounds(42, 213, 105, 14);
 		contentPane.add(lblDisponibilidad);
 		
-		JLabel lblCodigo = new JLabel("Codigo:");
-		lblCodigo.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblCodigo.setBounds(62, 170, 65, 14);
-		contentPane.add(lblCodigo);
+		JComboBox<String> availabilitySelect = new JComboBox<String>();
+		availabilitySelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		availabilitySelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Mañana", "Tarde", "Noche" }));
+		availabilitySelect.setToolTipText("");
+		availabilitySelect.setBounds(135, 210, 173, 22);
+		contentPane.add(availabilitySelect);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(155, 168, 173, 20);
-		contentPane.add(textField_3);
+		JLabel lblNewLabel_1 = new JLabel("REGISTRO RECURSOS");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 30));
+		lblNewLabel_1.setBounds(155, 54, 340, 36);
+		contentPane.add(lblNewLabel_1);
 		
-		JComboBox<String> genderSelect = new JComboBox<String>();
-		genderSelect.setFont(new Font("Arial", Font.PLAIN, 11));
-		genderSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Mañana", "Tarde", "Noche" }));
-		genderSelect.setToolTipText("");
-		genderSelect.setBounds(155, 139, 173, 22);
-		contentPane.add(genderSelect);
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(RegistroRecurso.class.getResource("/img/recursos.png")));
+		lblNewLabel_2.setBounds(349, 101, 275, 271);
+		contentPane.add(lblNewLabel_2);
 	}
-
 }

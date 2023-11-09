@@ -129,17 +129,17 @@ public class Registro extends JFrame {
 		lblPasword.setBounds(68, 191, 84, 23);
 		contentPane.add(lblPasword);
 		
-		JLabel lblCargo = new JLabel("Cargo:");
-		lblCargo.setHorizontalAlignment(SwingConstants.LEFT);
-		lblCargo.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblCargo.setBounds(68, 223, 84, 23);
-		contentPane.add(lblCargo);
+		JLabel lblPost = new JLabel("Cargo:");
+		lblPost.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPost.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblPost.setBounds(68, 223, 84, 23);
+		contentPane.add(lblPost);
 		
-		JComboBox<String> genderSelect = new JComboBox<String>();
-		genderSelect.setFont(new Font("Arial", Font.PLAIN, 11));
-		genderSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Administrador", "Medico" }));
-		genderSelect.setToolTipText("");
-		genderSelect.setBounds(185, 155, 168, 22);
-		contentPane.add(genderSelect);
+		JComboBox<String> postSelect = new JComboBox<String>();
+		postSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		postSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Administrador", "Medico" }));
+		postSelect.setToolTipText("");
+		postSelect.setBounds(168, 223, 181, 22);
+		contentPane.add(postSelect);
 	}
 }
