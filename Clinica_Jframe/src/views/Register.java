@@ -78,6 +78,7 @@ public class Register extends JFrame {
 		JButton inicioBtn = new JButton("INICIA SESION");
 		inicioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		inicioBtn.setFont(new Font("Arial", Font.PLAIN, 14));

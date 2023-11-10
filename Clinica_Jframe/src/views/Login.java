@@ -158,7 +158,7 @@ public class Login extends JFrame {
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				RegisterAdm createWindow = new RegisterAdm();
+				Register createWindow = new Register();
 				createWindow.setLocationRelativeTo(null);
 				createWindow.setVisible(true);
 			}
