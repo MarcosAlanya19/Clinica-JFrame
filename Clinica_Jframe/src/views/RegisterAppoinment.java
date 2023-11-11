@@ -181,7 +181,7 @@ public class RegisterAppoinment extends JFrame {
 
 			while (rs.next()) {
 				int id = rs.getInt("id");
-				String name = rs.getString("name");
+				String name = String.format("Dr. %s", rs.getString("name"));
 				Patient patient = new Patient(id, name);
 				patientSelect.addItem(patient);
 			}
