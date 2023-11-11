@@ -69,8 +69,7 @@ public class RegisterAdm extends JFrame {
 	 */
 	public RegisterAdm() {
 		setBackground(new Color(255, 255, 255));
-		setIconImage(
-				Toolkit.getDefaultToolkit().getImage(RegisterAdm.class.getResource("/img/logo.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegisterAdm.class.getResource("/img/logo.png")));
 		connect = DBConnection.getConnection();
 		setTitle("Registro de Administrador");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -247,63 +246,69 @@ public class RegisterAdm extends JFrame {
 				String selectedGender = (String) genderSelect.getSelectedItem();
 				String genderMapping = "Masculino".equals(selectedGender) ? "Male" : "Female";
 
+				if (name.isEmpty() || lastname.isEmpty() || email.isEmpty() || password.isEmpty() || verifyPassword.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
+					return;
+				}
+
+				if (dni.length() != 8) {
+					JOptionPane.showMessageDialog(null, "El DNI es incorrecto. asegurese de ingresar datos reales");
+					dniField.setText(null);
+					return;
+				}
+
+				if (phone.length() != 9) {
+					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar 9 digitos");
+					phoneField.setText(null);
+					return;
+				}
+
+				if (dniExist(dni)) {
+					JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
+					dniField.setText(null);
+					return;
+				}
+
+				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+				Pattern pattern = Pattern.compile(emailRegex);
+				Matcher matcher = pattern.matcher(email);
+
+				if (!matcher.matches()) {
+					JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
+					emailField.setText(null);
+					return;
+				}
+
+				if (!password.equals(verifyPassword)) {
+					JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
+					return;
+				}
+
 				try {
-					if (name.isEmpty() || lastname.isEmpty() || email.isEmpty() || password.isEmpty()
-							|| verifyPassword.isEmpty()) {
-						JOptionPane.showMessageDialog(null, "todos los campos son obligatorios");
-					} else {
-						if (dni.length() != 8) {
-							JOptionPane.showMessageDialog(null, "El DNI es incorrecto. asegurese de ingresar datos reales");
-							return;
-						}
-						if (phone.length() != 9) {
-							JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
-							return;
-						}
+					String query = "INSERT INTO administrative (name, lastname, dni, phone, email, password, gender) VALUES (?,?,?,?,?,?,?)";
+					PreparedStatement st = connect.prepareStatement(query);
+					st.setString(1, name);
+					st.setString(2, lastname);
+					st.setString(3, dni);
+					st.setString(4, phone);
+					st.setString(5, email);
+					st.setString(6, hashedPassword);
+					st.setString(7, genderMapping);
+					st.executeUpdate();
 
-						else {
-							String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-							Pattern pattern = Pattern.compile(emailRegex);
-							Matcher matcher = pattern.matcher(email);
-
-							if (matcher.matches()) {
-								if (dniExist(dni)) {
-									JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
-									return;
-								} else {
-									if (password.equals(verifyPassword)) {
-										String query = "INSERT INTO administrative (name, lastname, dni, phone, email, password, gender) VALUES (?,?,?,?,?,?,?)";
-										PreparedStatement st = connect.prepareStatement(query);
-										st.setString(1, name);
-										st.setString(2, lastname);
-										st.setString(3, dni);
-										st.setString(4, phone);
-										st.setString(5, email);
-										st.setString(6, hashedPassword);
-										st.setString(7, genderMapping);
-										st.executeUpdate();
-
-										JOptionPane.showMessageDialog(null, "Administrador registrado correctamente");
-										nameField.setText(null);
-										lastnameField.setText(null);
-										dniField.setText(null);
-										phoneField.setText(null);
-										emailField.setText(null);
-										passwordField.setText(null);
-										verifyPasswordField.setText(null);
-									} else {
-										JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
-									}
-								}
-							} else {
-								JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
-								emailField.setText(null);
-							}
-						}
-					}
+					JOptionPane.showMessageDialog(null, "Administrador registrado correctamente");
+					nameField.setText(null);
+					lastnameField.setText(null);
+					dniField.setText(null);
+					phoneField.setText(null);
+					emailField.setText(null);
+					passwordField.setText(null);
+					verifyPasswordField.setText(null);
+					
+					
 				} catch (Exception err) {
 					err.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error");
+					JOptionPane.showMessageDialog(null, "Error en el servidor");
 				}
 			}
 
@@ -339,11 +344,29 @@ public class RegisterAdm extends JFrame {
 		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_2.setBounds(82, 315, 86, 20);
 		contentPane.add(lblNewLabel_2);
-		
+
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setIcon(new ImageIcon(RegisterAdm.class.getResource("/img/Adm.png")));
 		lblNewLabel_3.setBounds(363, 92, 240, 256);
 		contentPane.add(lblNewLabel_3);
+
+		JLabel lblNewLabel_2_1 = new JLabel("¿ya tienes una cuenta?");
+		lblNewLabel_2_1.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_2_1.setBounds(302, 375, 157, 20);
+		contentPane.add(lblNewLabel_2_1);
+
+		JButton btnIniciarSesion = new JButton("INICIAR SESION");
+		btnIniciarSesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Login createWindow = new Login();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		btnIniciarSesion.setFont(new Font("Arial", Font.BOLD, 11));
+		btnIniciarSesion.setBounds(466, 375, 112, 23);
+		contentPane.add(btnIniciarSesion);
 	}
 
 	private static String hashPassword(String password) {

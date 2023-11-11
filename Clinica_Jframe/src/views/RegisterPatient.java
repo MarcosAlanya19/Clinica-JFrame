@@ -38,7 +38,7 @@ public class RegisterPatient extends JFrame {
 	private JTextField phoneField;
 	private Connection connect;
 	private JTextField ageField;
-	private int id;
+	private int idHistoryMedical = 0;
 
 	/**
 	 * Launch the application.
@@ -121,7 +121,7 @@ public class RegisterPatient extends JFrame {
 		birthdateField.setBounds(464, 180, 162, 19);
 		contentPane.add(birthdateField);
 		birthdateField.setColumns(10);
-		
+
 		JComboBox<String> genderSelect = new JComboBox<String>();
 		genderSelect.setFont(new Font("Arial", Font.PLAIN, 11));
 		genderSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Masculino", "Femenino" }));
@@ -139,107 +139,161 @@ public class RegisterPatient extends JFrame {
 		contentPane.add(phoneField);
 		phoneField.setColumns(10);
 
+		JButton startBtn = new JButton("INICIO");
+		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		startBtn.setBounds(91, 361, 114, 21);
+		contentPane.add(startBtn);
+
+		ageField = new JTextField();
+		ageField.setBounds(76, 161, 162, 19);
+		contentPane.add(ageField);
+		ageField.setColumns(10);
+
+		JComboBox<String> bloodTypeSelect = new JComboBox<String>();
+		bloodTypeSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "A", "B", "AB", "O" }));
+		bloodTypeSelect.setToolTipText("");
+		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 11));
+		bloodTypeSelect.setBounds(76, 109, 162, 22);
+		contentPane.add(bloodTypeSelect);
+
+		JTextPane descriptionField = new JTextPane();
+		descriptionField.setBounds(76, 197, 162, 89);
+		contentPane.add(descriptionField);
+
 		JButton registerBtn = new JButton("REGISTRO");
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
 				String dni = dniField.getText();
-				String dateOfBirth = birthdateField.getText();
-				String gender =(String) genderSelect.getSelectedItem();
+				String birthdate = birthdateField.getText();
+				String gender = (String) genderSelect.getSelectedItem();
 				String address = addressField.getText();
 				String phone = phoneField.getText();
-				
+
+				if (idHistoryMedical == 0) {
+					JOptionPane.showMessageDialog(null, "Error: El ID del historial médico no está establecido");
+					return;
+				}
+
+				if (name.isEmpty() || dni.isEmpty() || birthdate.isEmpty() || gender.isEmpty() || address.isEmpty()
+						|| phone.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
+					return;
+				}
+
+				if (dni.length() != 8) {
+					JOptionPane.showMessageDialog(null, "El DNI es incorrecto. asegurese de ingresar datos reales");
+					dniField.setText(null);
+					return;
+				}
+
+				if (phone.length() != 9) {
+					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
+					phoneField.setText(null);
+					return;
+				}
+
+				if (dniExist(dni)) {
+					JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
+					dniField.setText(null);
+					return;
+				}
+
+				if (!birthdate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+					JOptionPane.showMessageDialog(null,
+							"Formato de fecha de nacimiento incorrecto. Utilice el formato YYYY-MM-DD.");
+					birthdateField.setText(null);
+					return;
+				}
 
 				try {
 					String query = "INSERT INTO Patient (name, dni, dateOfBirth, gender, address, phone, MedicalHistory_id) VALUES (?,?,?,?,?,?,?)";
-		            PreparedStatement st = connect.prepareStatement(query);
-		            st.setString(1, name);
-		            st.setString(2, dni);
-		            st.setString(3, dateOfBirth);
-		            st.setString(4, gender);
-		            st.setString(5, address);
-		            st.setString(6, phone);
-		            st.setInt(7, id);
-		            st.executeUpdate();
+					PreparedStatement st = connect.prepareStatement(query);
+					st.setString(1, name);
+					st.setString(2, dni);
+					st.setString(3, birthdate);
+					st.setString(4, gender);
+					st.setString(5, address);
+					st.setString(6, phone);
+					st.setInt(7, idHistoryMedical);
+					st.executeUpdate();
 
-					
-					JOptionPane.showMessageDialog(null,"Paciente registrado correctamente");
-					nameField.setText(null);
-					dniField.setText(null);
-					birthdateField.setText(null);
-					addressField.setText(null);
-					phoneField.setText(null);
-					
+					JOptionPane.showMessageDialog(null, "Paciente registrado correctamente");
+
+					dispose();
+					RegisterPatient createWindow = new RegisterPatient();
+					createWindow.setLocationRelativeTo(null);
+					createWindow.setVisible(true);
 				} catch (Exception err) {
 					err.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error en el servidor");
 				}
-
 			}
 		});
 		registerBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		registerBtn.setBounds(396, 361, 125, 21);
 		contentPane.add(registerBtn);
 
-		JButton startBtn = new JButton("INICIO");
-		startBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				Home createWindow = new Home();
-				createWindow.setLocationRelativeTo(null);
-				createWindow.setVisible(true);
-			}
-		});
-		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		startBtn.setBounds(91, 361, 114, 21);
-		contentPane.add(startBtn);
-		
-		
-		ageField = new JTextField();
-		ageField.setBounds(76, 161, 162, 19);
-		contentPane.add(ageField);
-		ageField.setColumns(10);
-		
-		JComboBox<String> bloodTypeSelect = new JComboBox<String>();
-		bloodTypeSelect.setModel(new DefaultComboBoxModel(new String[] {"A", "B", "AB", "O"}));
-		bloodTypeSelect.setToolTipText("");
-		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 11));
-		bloodTypeSelect.setBounds(76, 109, 162, 22);
-		contentPane.add(bloodTypeSelect);
-		
-		JTextPane descriptionField = new JTextPane();
-		descriptionField.setBounds(76, 197, 162, 89);
-		contentPane.add(descriptionField);
-		
+		nameField.setEnabled(false);
+		dniField.setEnabled(false);
+		birthdateField.setEnabled(false);
+		genderSelect.setEnabled(false);
+		addressField.setEnabled(false);
+		phoneField.setEnabled(false);
+		registerBtn.setEnabled(false);
+
 		JButton btnNewButton = new JButton("REGISTRO HISTORIAL MÉDICO");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String bloodType =(String) bloodTypeSelect.getSelectedItem();
+				String bloodType = (String) bloodTypeSelect.getSelectedItem();
 				String age = ageField.getText();
 				String description = descriptionField.getText();
-				
+
+				if (bloodType.isEmpty() || age.isEmpty() || description.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
+					return;
+				}
+
+				if (age.length() != 2) {
+					JOptionPane.showMessageDialog(null, "La edad solo puede tener 2 digitos");
+					ageField.setText(null);
+					return;
+				}
+
 				try {
-		            String query = "INSERT INTO MedicalHistory(bloodType, age, description) VALUES (?,?,?)";
-		            PreparedStatement st = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-		            st.setString(1, bloodType);
-		            st.setString(2, age);
-		            st.setString(3, description);
+					String query = "INSERT INTO MedicalHistory(bloodType, age, description) VALUES (?,?,?)";
+					PreparedStatement st = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+					st.setString(1, bloodType);
+					st.setString(2, age);
+					st.setString(3, description);
 
-		            int affectedRows = st.executeUpdate();
+					int affectedRows = st.executeUpdate();
 
-		            if (affectedRows > 0) {
-		                ResultSet generatedKeys = st.getGeneratedKeys();
-		                if (generatedKeys.next()) {
-		                    int id = generatedKeys.getInt(1);
-		                    // Ahora puedes usar 'id' como desees
-		                    JOptionPane.showMessageDialog(null, "Historial médico registrado correctamente. ID: " + id);
-		                }
-		            }
+					if (affectedRows > 0) {
+						ResultSet generatedKeys = st.getGeneratedKeys();
+						if (generatedKeys.next()) {
+							idHistoryMedical = generatedKeys.getInt(1);
+							JOptionPane.showMessageDialog(null, "Historial médico registrado correctamente. ID: " + idHistoryMedical);
 
-		            ageField.setText(null);
-		            descriptionField.setText(null);	                
+							if (idHistoryMedical != 0) {
+								nameField.setEnabled(true);
+								dniField.setEnabled(true);
+								birthdateField.setEnabled(true);
+								genderSelect.setEnabled(true);
+								addressField.setEnabled(true);
+								phoneField.setEnabled(true);
+								registerBtn.setEnabled(true);
 
-					
+								bloodTypeSelect.setEnabled(false);
+								ageField.setEnabled(false);
+								descriptionField.setEnabled(false);
+								btnNewButton.setEnabled(false);
+							}
+						}
+					}
+					ageField.setText(null);
+					descriptionField.setText(null);
+
 				} catch (Exception err) {
 					err.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error en el servidor");
@@ -249,5 +303,18 @@ public class RegisterPatient extends JFrame {
 		});
 		btnNewButton.setBounds(33, 306, 205, 21);
 		contentPane.add(btnNewButton);
+	}
+
+	private boolean dniExist(String dni) {
+		try {
+			String sql = "SELECT dni FROM Patient WHERE dni = ?";
+			PreparedStatement statement = connect.prepareStatement(sql);
+			statement.setString(1, dni);
+			ResultSet result = statement.executeQuery();
+			return result.next();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

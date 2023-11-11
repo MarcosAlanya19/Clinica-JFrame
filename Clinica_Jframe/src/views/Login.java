@@ -23,7 +23,6 @@ import javax.swing.border.EmptyBorder;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import contructor.User;
 import model.DBConnection;
 
 public class Login extends JFrame {
@@ -84,18 +83,28 @@ public class Login extends JFrame {
 				char[] passwordChars = passwordField.getPassword();
 				String password = new String(passwordChars);
 
+				if (username.isEmpty() || password.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Por favor, ingrese tanto el nombre de usuario como la contraseña.");
+					return;
+				}
+
+				if (!isValidEmail(username)) {
+					JOptionPane.showMessageDialog(null, "Por favor, ingrese un correo electrónico válido.");
+					return;
+				}
+
 				try {
-					String query = "SELECT id, email, password FROM administrative WHERE email = ?";
+					String query = "SELECT * FROM administrative WHERE email = ?";
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, username);
 
 					ResultSet rs = st.executeQuery();
 
 					if (rs.next()) {
-						int id = rs.getInt("id");
 						String hashedPasswordFromDatabase = rs.getString("password");
+						System.out.println("Contraseña en la base de datos: " + hashedPasswordFromDatabase);
+
 						if (BCrypt.checkpw(password, hashedPasswordFromDatabase)) {
-							User authenticatedUser = new User(id, username);
 							dispose();
 							Home createWindow = new Home();
 							createWindow.setLocationRelativeTo(null);
@@ -113,6 +122,11 @@ public class Login extends JFrame {
 					e2.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Ha ocurrido un error durante la autenticación.");
 				}
+			}
+
+			private boolean isValidEmail(String email) {
+				String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+				return email.matches(regex);
 			}
 
 		});
@@ -144,7 +158,7 @@ public class Login extends JFrame {
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				RegisterAdm createWindow = new RegisterAdm();
+				Register createWindow = new Register();
 				createWindow.setLocationRelativeTo(null);
 				createWindow.setVisible(true);
 			}
