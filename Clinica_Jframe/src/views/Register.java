@@ -28,6 +28,8 @@ import javax.swing.border.EmptyBorder;
 import org.mindrot.jbcrypt.BCrypt;
 
 import model.DBConnection;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Register extends JFrame {
 
@@ -196,6 +198,23 @@ public class Register extends JFrame {
 		contentPane.add(lblName);
 		
 		nameField = new JTextField();
+		nameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean mayusculas = key >= 65 && key <= 90;
+					boolean minusculas = key >= 97 && key <= 122;
+					boolean espacio = key == 32;
+
+					if (!(minusculas || mayusculas || espacio)) {
+						e.consume();
+					}
+				} catch (Exception c) {
+				}
+			}
+		});
 		nameField.setFont(new Font("Arial", Font.PLAIN, 14));
 		nameField.setBounds(170, 122, 176, 20);
 		contentPane.add(nameField);

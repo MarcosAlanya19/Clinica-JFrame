@@ -35,6 +35,7 @@ public class RegisterMedical extends JFrame {
 	private JTextField nameField;
 	private JTextField phoneField;
 	private JTextField emailField;
+	
 	private JTextField addressField;
 	private JLabel lblEmail;
 
@@ -88,7 +89,7 @@ public class RegisterMedical extends JFrame {
 					return;
 				}
 				
-				if (phone.length() != 8) {
+				if (phone.length() != 9) {
 					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
 					return;
 				}
@@ -234,7 +235,7 @@ public class RegisterMedical extends JFrame {
 						e.consume();
 					}
 
-					if (phoneField.getText().trim().length() == 8) {
+					if (phoneField.getText().trim().length() == 9) {
 						e.consume();
 					}
 				} catch (Exception b) {

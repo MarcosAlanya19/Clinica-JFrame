@@ -17,6 +17,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegisterMedicalHistory extends JFrame {
 
@@ -104,6 +106,12 @@ public class RegisterMedicalHistory extends JFrame {
 		panel.add(lblDescription);
 		
 		ageField = new JTextField();
+		ageField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+			}
+		});
 		ageField.setBounds(96, 109, 170, 20);
 		panel.add(ageField);
 		ageField.setColumns(10);
