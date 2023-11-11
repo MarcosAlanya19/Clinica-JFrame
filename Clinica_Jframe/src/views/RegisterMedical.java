@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-
 import model.DBConnection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -35,12 +35,12 @@ public class RegisterMedical extends JFrame {
 	private JTextField nameField;
 	private JTextField phoneField;
 	private JTextField emailField;
-	
+
 	private JTextField addressField;
 	private JLabel lblEmail;
 
 	private Connection connect;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -74,6 +74,33 @@ public class RegisterMedical extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JButton asignarRecursosBtn = new JButton("<html>ASIGNAR<br>RECURSOS</html>");
+		asignarRecursosBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterResource createWindow = new RegisterResource();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		asignarRecursosBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		asignarRecursosBtn.setBounds(341, 346, 107, 54);
+		contentPane.add(asignarRecursosBtn);
+		
+		JButton asignarHorariosBtn = new JButton("<html>ASIGNAR<br>HORARIOS</html>");
+		asignarHorariosBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterSchedules createWindow = new RegisterSchedules();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		asignarHorariosBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		asignarHorariosBtn.setBounds(490, 346, 107, 54);
+		contentPane.add(asignarHorariosBtn);
+
 
 		JButton registroBtn = new JButton("REGISTRO");
 		registroBtn.addActionListener(new ActionListener() {
@@ -82,36 +109,34 @@ public class RegisterMedical extends JFrame {
 				String phone = phoneField.getText();
 				String email = emailField.getText();
 				String address = addressField.getText();
-				
-				
+
 				if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
 					return;
 				}
-				
+
 				if (phone.length() != 9) {
-					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
+					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar solo 9 digitos");
 					return;
 				}
-				
-				
+
 				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
 				Pattern pattern = Pattern.compile(emailRegex);
 				Matcher matcher = pattern.matcher(email);
-				
 
 				if (!matcher.matches()) {
 					JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
 					emailField.setText(null);
 					return;
 				}
-				
+
 				if (matcher.matches()) {
 					if (emailExist(email)) {
 						JOptionPane.showMessageDialog(null, "El email ya ha sido registrado. Por favor, ingrese otro email.");
-						return;}
+						return;
+					}
 				}
-				
+
 				try {
 					String query = "INSERT INTO doctor (name, phone, email, address) VALUES (?,?,?,?)";
 					PreparedStatement st = connect.prepareStatement(query);
@@ -120,20 +145,22 @@ public class RegisterMedical extends JFrame {
 					st.setString(3, email);
 					st.setString(4, address);
 					st.executeUpdate();
-					
 
 					JOptionPane.showMessageDialog(null, "Medico registrado correctamente");
 					nameField.setText(null);
 					phoneField.setText(null);
 					emailField.setText(null);
-					addressField.setText(null); 
+					addressField.setText(null);
 					
+					asignarHorariosBtn.setEnabled(true);
+					asignarRecursosBtn.setEnabled(true);
+
 				} catch (Exception err) {
 					err.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error en el servidor");
 				}
-				
-            }
+
+			}
 
 			private boolean emailExist(String email) {
 				try {
@@ -148,7 +175,7 @@ public class RegisterMedical extends JFrame {
 				}
 			}
 		});
-		registroBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		registroBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		registroBtn.setBounds(60, 274, 117, 23);
 		contentPane.add(registroBtn);
 
@@ -161,22 +188,9 @@ public class RegisterMedical extends JFrame {
 				createWindow.setVisible(true);
 			}
 		});
-		inicioBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		inicioBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		inicioBtn.setBounds(210, 274, 89, 23);
 		contentPane.add(inicioBtn);
-
-		JButton asignarRecursosBtn = new JButton("<html>ASIGNAR<br>RECURSOS</html>");
-		asignarRecursosBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				RegisterResource createWindow = new RegisterResource();
-				createWindow.setLocationRelativeTo(null);
-				createWindow.setVisible(true);
-			}
-		});
-		asignarRecursosBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-		asignarRecursosBtn.setBounds(341, 346, 107, 54);
-		contentPane.add(asignarRecursosBtn);
 
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(RegisterMedical.class.getResource("/img/registerMedical.png")));
@@ -266,18 +280,26 @@ public class RegisterMedical extends JFrame {
 		lblAddress.setBounds(40, 222, 68, 17);
 		contentPane.add(lblAddress);
 
-		JButton asignarHorariosBtn = new JButton("<html>ASIGNAR<br>HORARIOS</html>");
-		asignarHorariosBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				RegisterSchedules createWindow = new RegisterSchedules();
-				createWindow.setLocationRelativeTo(null);
-				createWindow.setVisible(true);
-			}
-		});
-		asignarHorariosBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-		asignarHorariosBtn.setBounds(490, 346, 107, 54);
-		contentPane.add(asignarHorariosBtn);
+		boolean doctorsEmpty = checkIfTableIsEmpty("Doctor");
+
+		asignarHorariosBtn.setEnabled(!doctorsEmpty);
+		asignarRecursosBtn.setEnabled(!doctorsEmpty);
 	}
 
+	private boolean checkIfTableIsEmpty(String tableName) {
+		boolean isEmpty = false;
+		try {
+			String query = "SELECT COUNT(*) as count FROM " + tableName;
+			PreparedStatement st = connect.prepareStatement(query);
+			ResultSet rs = st.executeQuery();
+
+			if (rs.next()) {
+				int count = rs.getInt("count");
+				isEmpty = count == 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return isEmpty;
+	}
 }
