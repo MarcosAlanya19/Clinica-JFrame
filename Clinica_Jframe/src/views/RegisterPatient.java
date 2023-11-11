@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+import com.toedter.calendar.JDateChooser;
+
 import model.DBConnection;
 
 public class RegisterPatient extends JFrame {
@@ -33,7 +35,6 @@ public class RegisterPatient extends JFrame {
 	private JPanel contentPane;
 	private JTextField nameField;
 	private JTextField dniField;
-	private JTextField birthdateField;
 	private JTextField addressField;
 	private JTextField phoneField;
 	private Connection connect;
@@ -117,13 +118,8 @@ public class RegisterPatient extends JFrame {
 		contentPane.add(dniField);
 		dniField.setColumns(10);
 
-		birthdateField = new JTextField();
-		birthdateField.setBounds(464, 180, 162, 19);
-		contentPane.add(birthdateField);
-		birthdateField.setColumns(10);
-
 		JComboBox<String> genderSelect = new JComboBox<String>();
-		genderSelect.setFont(new Font("Arial", Font.PLAIN, 11));
+		genderSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		genderSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Masculino", "Femenino" }));
 		genderSelect.setToolTipText("");
 		genderSelect.setBounds(464, 222, 162, 22);
@@ -140,24 +136,32 @@ public class RegisterPatient extends JFrame {
 		phoneField.setColumns(10);
 
 		JButton startBtn = new JButton("INICIO");
+		startBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home createWindow = new Home();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		startBtn.setBounds(91, 361, 114, 21);
 		contentPane.add(startBtn);
 
 		ageField = new JTextField();
-		ageField.setBounds(76, 161, 162, 19);
+		ageField.setBounds(128, 137, 162, 19);
 		contentPane.add(ageField);
 		ageField.setColumns(10);
 
 		JComboBox<String> bloodTypeSelect = new JComboBox<String>();
 		bloodTypeSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "A", "B", "AB", "O" }));
 		bloodTypeSelect.setToolTipText("");
-		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 11));
-		bloodTypeSelect.setBounds(76, 109, 162, 22);
+		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		bloodTypeSelect.setBounds(128, 93, 162, 22);
 		contentPane.add(bloodTypeSelect);
 
 		JTextPane descriptionField = new JTextPane();
-		descriptionField.setBounds(76, 197, 162, 89);
+		descriptionField.setBounds(128, 182, 162, 89);
 		contentPane.add(descriptionField);
 
 		JButton registerBtn = new JButton("REGISTRO");
@@ -165,7 +169,6 @@ public class RegisterPatient extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
 				String dni = dniField.getText();
-				String birthdate = birthdateField.getText();
 				String gender = (String) genderSelect.getSelectedItem();
 				String address = addressField.getText();
 				String phone = phoneField.getText();
@@ -175,7 +178,7 @@ public class RegisterPatient extends JFrame {
 					return;
 				}
 
-				if (name.isEmpty() || dni.isEmpty() || birthdate.isEmpty() || gender.isEmpty() || address.isEmpty()
+				if (name.isEmpty() || dni.isEmpty() || gender.isEmpty() || address.isEmpty()
 						|| phone.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
 					return;
@@ -199,19 +202,11 @@ public class RegisterPatient extends JFrame {
 					return;
 				}
 
-				if (!birthdate.matches("\\d{4}-\\d{2}-\\d{2}")) {
-					JOptionPane.showMessageDialog(null,
-							"Formato de fecha de nacimiento incorrecto. Utilice el formato YYYY-MM-DD.");
-					birthdateField.setText(null);
-					return;
-				}
-
 				try {
 					String query = "INSERT INTO Patient (name, dni, dateOfBirth, gender, address, phone, MedicalHistory_id) VALUES (?,?,?,?,?,?,?)";
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, name);
 					st.setString(2, dni);
-					st.setString(3, birthdate);
 					st.setString(4, gender);
 					st.setString(5, address);
 					st.setString(6, phone);
@@ -236,13 +231,13 @@ public class RegisterPatient extends JFrame {
 
 		nameField.setEnabled(false);
 		dniField.setEnabled(false);
-		birthdateField.setEnabled(false);
 		genderSelect.setEnabled(false);
 		addressField.setEnabled(false);
 		phoneField.setEnabled(false);
 		registerBtn.setEnabled(false);
 
 		JButton btnNewButton = new JButton("REGISTRO HISTORIAL MÉDICO");
+		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String bloodType = (String) bloodTypeSelect.getSelectedItem();
@@ -278,7 +273,6 @@ public class RegisterPatient extends JFrame {
 							if (idHistoryMedical != 0) {
 								nameField.setEnabled(true);
 								dniField.setEnabled(true);
-								birthdateField.setEnabled(true);
 								genderSelect.setEnabled(true);
 								addressField.setEnabled(true);
 								phoneField.setEnabled(true);
@@ -301,8 +295,27 @@ public class RegisterPatient extends JFrame {
 
 			}
 		});
-		btnNewButton.setBounds(33, 306, 205, 21);
+		btnNewButton.setBounds(49, 319, 219, 21);
 		contentPane.add(btnNewButton);
+		
+		JLabel bloodTypeLabel = new JLabel("Tipo de sangre:");
+		bloodTypeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+		bloodTypeLabel.setBounds(10, 94, 129, 18);
+		contentPane.add(bloodTypeLabel);
+		
+		JLabel lblNewLabel_7 = new JLabel("Edad:");
+		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_7.setBounds(10, 132, 45, 27);
+		contentPane.add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_8 = new JLabel("Descripción:");
+		lblNewLabel_8.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_8.setBounds(10, 182, 90, 13);
+		contentPane.add(lblNewLabel_8);
+		
+		JDateChooser birthdayDate = new JDateChooser();
+		birthdayDate.setBounds(464, 182, 162, 19);
+		contentPane.add(birthdayDate);
 	}
 
 	private boolean dniExist(String dni) {
