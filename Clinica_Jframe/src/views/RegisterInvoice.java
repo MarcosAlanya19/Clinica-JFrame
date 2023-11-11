@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,12 +27,15 @@ import model.DBConnection;
 import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
 
+import contructor.Patient;
+
 public class RegisterInvoice extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField totalField;
 	private Connection connect;
+	JComboBox<Object> patientSelect;
 
 	/**
 	 * Launch the application.
@@ -91,6 +98,30 @@ public class RegisterInvoice extends JFrame {
 		detailField.setBounds(141, 275, 182, 69);
 		contentPane.add(detailField);
 
+		JLabel lblNewLabel_6 = new JLabel("");
+		lblNewLabel_6.setIcon(new ImageIcon(RegisterInvoice.class.getResource("/img/invoice.png")));
+		lblNewLabel_6.setBounds(355, 50, 308, 297);
+		contentPane.add(lblNewLabel_6);
+
+		JLabel lblNewLabel_7 = new JLabel("Paciente:");
+		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_7.setBounds(32, 92, 83, 13);
+		contentPane.add(lblNewLabel_7);
+
+		patientSelect = new JComboBox<Object>();
+		showPatientSelect();
+		patientSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		patientSelect.setBounds(141, 88, 182, 21);
+		contentPane.add(patientSelect);
+
+		JDateChooser issueDate = new JDateChooser();
+		issueDate.setBounds(141, 137, 182, 19);
+		contentPane.add(issueDate);
+
+		JLabel label = new JLabel("New label");
+		label.setBounds(554, 359, 45, 13);
+		contentPane.add(label);
+
 		JButton startBtn = new JButton("INICIO");
 		startBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -108,56 +139,55 @@ public class RegisterInvoice extends JFrame {
 		registerBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String issueDate = dateOfIssueField.getText();
-				String ruc = rucField.getText();
-				String businessName = businessNameField.getText();
 				String total = totalField.getText();
 				String detail = detailField.getText();
-				String patient = patientField.getText();
+
+				Date selectedDate = issueDate.getDate();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedDate = sdf.format(selectedDate);
+
+				Patient selectedPatient = (Patient) patientSelect.getSelectedItem();
+				int patientId = selectedPatient.getId();
 
 				try {
 					String query = "INSERT INTO Invoice (issueDate, total, businessName, ruc, detail, Patient_id) VALUES (?, ?, ?, ?, ?,?)";
 					PreparedStatement st = connect.prepareStatement(query);
-					st.setString(1, issueDate);
+					st.setString(1, formattedDate);
 					st.setString(2, total);
-					st.setString(3, businessName);
-					st.setString(4, ruc);
+					st.setString(3, "Clinica Maria del Pilar");
+					st.setString(4, "20602477925");
 					st.setString(5, detail);
-					st.setString(6, patient);
+					st.setLong(6, patientId);
 					st.executeUpdate();
 
 					JOptionPane.showMessageDialog(null, "Factura registrada correctamente");
 
 				} catch (Exception err) {
 					err.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error");
+					JOptionPane.showMessageDialog(null, "Error en el servidor");
 				}
 			}
 		});
 		registerBtn.setBounds(220, 354, 116, 21);
 		contentPane.add(registerBtn);
+	}
 
-		JLabel lblNewLabel_6 = new JLabel("");
-		lblNewLabel_6.setIcon(new ImageIcon(RegisterInvoice.class.getResource("/img/invoice.png")));
-		lblNewLabel_6.setBounds(355, 50, 308, 297);
-		contentPane.add(lblNewLabel_6);
-		
-		JLabel lblNewLabel_7 = new JLabel("Paciente:");
-		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_7.setBounds(32, 92, 83, 13);
-		contentPane.add(lblNewLabel_7);
-		
-		JComboBox patientSelect = new JComboBox();
-		patientSelect.setFont(new Font("Arial", Font.PLAIN, 14));
-		patientSelect.setBounds(141, 88, 182, 21);
-		contentPane.add(patientSelect);
-		
-		JDateChooser issueDate = new JDateChooser();
-		issueDate.setBounds(141, 137, 182, 19);
-		contentPane.add(issueDate);
-		
-		JLabel label = new JLabel("New label");
-		label.setBounds(554, 359, 45, 13);
-		contentPane.add(label);
+	private void showPatientSelect() {
+		try {
+			String query = "SELECT id, name FROM Patient";
+			PreparedStatement st = connect.prepareStatement(query);
+			ResultSet rs = st.executeQuery();
+			patientSelect.removeAllItems();
+
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				Patient patient = new Patient(id, name);
+				patientSelect.addItem(patient);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -159,6 +161,25 @@ public class RegisterPatient extends JFrame {
 		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		bloodTypeSelect.setBounds(128, 93, 162, 22);
 		contentPane.add(bloodTypeSelect);
+		
+		JLabel bloodTypeLabel = new JLabel("Tipo de sangre:");
+		bloodTypeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+		bloodTypeLabel.setBounds(10, 94, 129, 18);
+		contentPane.add(bloodTypeLabel);
+		
+		JLabel lblNewLabel_7 = new JLabel("Edad:");
+		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_7.setBounds(10, 132, 45, 27);
+		contentPane.add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_8 = new JLabel("Descripción:");
+		lblNewLabel_8.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_8.setBounds(10, 182, 90, 13);
+		contentPane.add(lblNewLabel_8);
+		
+		JDateChooser birthdayDate = new JDateChooser();
+		birthdayDate.setBounds(464, 182, 162, 19);
+		contentPane.add(birthdayDate);
 
 		JTextPane descriptionField = new JTextPane();
 		descriptionField.setBounds(128, 182, 162, 89);
@@ -172,6 +193,10 @@ public class RegisterPatient extends JFrame {
 				String gender = (String) genderSelect.getSelectedItem();
 				String address = addressField.getText();
 				String phone = phoneField.getText();
+				
+				Date selectedDate = birthdayDate.getDate();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedDate = sdf.format(selectedDate);
 
 				if (idHistoryMedical == 0) {
 					JOptionPane.showMessageDialog(null, "Error: El ID del historial médico no está establecido");
@@ -207,6 +232,7 @@ public class RegisterPatient extends JFrame {
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, name);
 					st.setString(2, dni);
+					st.setString(3, formattedDate);
 					st.setString(4, gender);
 					st.setString(5, address);
 					st.setString(6, phone);
@@ -235,7 +261,8 @@ public class RegisterPatient extends JFrame {
 		addressField.setEnabled(false);
 		phoneField.setEnabled(false);
 		registerBtn.setEnabled(false);
-
+		birthdayDate.setEnabled(false);
+		
 		JButton btnNewButton = new JButton("REGISTRO HISTORIAL MÉDICO");
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
 		btnNewButton.addActionListener(new ActionListener() {
@@ -268,7 +295,7 @@ public class RegisterPatient extends JFrame {
 						ResultSet generatedKeys = st.getGeneratedKeys();
 						if (generatedKeys.next()) {
 							idHistoryMedical = generatedKeys.getInt(1);
-							JOptionPane.showMessageDialog(null, "Historial médico registrado correctamente. ID: " + idHistoryMedical);
+							JOptionPane.showMessageDialog(null, "Historial médico registrado correctamente");
 
 							if (idHistoryMedical != 0) {
 								nameField.setEnabled(true);
@@ -277,7 +304,8 @@ public class RegisterPatient extends JFrame {
 								addressField.setEnabled(true);
 								phoneField.setEnabled(true);
 								registerBtn.setEnabled(true);
-
+								birthdayDate.setEnabled(true);
+								
 								bloodTypeSelect.setEnabled(false);
 								ageField.setEnabled(false);
 								descriptionField.setEnabled(false);
@@ -297,25 +325,6 @@ public class RegisterPatient extends JFrame {
 		});
 		btnNewButton.setBounds(49, 319, 219, 21);
 		contentPane.add(btnNewButton);
-		
-		JLabel bloodTypeLabel = new JLabel("Tipo de sangre:");
-		bloodTypeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-		bloodTypeLabel.setBounds(10, 94, 129, 18);
-		contentPane.add(bloodTypeLabel);
-		
-		JLabel lblNewLabel_7 = new JLabel("Edad:");
-		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_7.setBounds(10, 132, 45, 27);
-		contentPane.add(lblNewLabel_7);
-		
-		JLabel lblNewLabel_8 = new JLabel("Descripción:");
-		lblNewLabel_8.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_8.setBounds(10, 182, 90, 13);
-		contentPane.add(lblNewLabel_8);
-		
-		JDateChooser birthdayDate = new JDateChooser();
-		birthdayDate.setBounds(464, 182, 162, 19);
-		contentPane.add(birthdayDate);
 	}
 
 	private boolean dniExist(String dni) {
