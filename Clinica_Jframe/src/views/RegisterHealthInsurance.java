@@ -16,6 +16,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import model.DBConnection;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class RegisterHealthInsurance extends JFrame {
 
@@ -26,10 +30,11 @@ public class RegisterHealthInsurance extends JFrame {
 	private JPanel contentPane;
 	private JTextField policyField;
 	private JTextField detailsField;
-	private JTextField companyField;
 	private JButton backBtn;
 	private JLabel lblNewLabel_4;
 	private Connection connect;
+	private JComboBox patientSelect;
+	private JLabel lblNewLabel_5;
 
 	/**
 	 * Launch the application.
@@ -92,19 +97,22 @@ public class RegisterHealthInsurance extends JFrame {
 		contentPane.add(detailsField);
 		detailsField.setColumns(10);
 		
-		companyField = new JTextField();
-		companyField.setBounds(200, 158, 134, 19);
-		contentPane.add(companyField);
-		companyField.setColumns(10);
-		
 		JButton registerBtn = new JButton("REGISTRO");
 		registerBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		registerBtn.setBounds(128, 278, 125, 21);
+		registerBtn.setBounds(128, 326, 125, 21);
 		contentPane.add(registerBtn);
 		
-		backBtn = new JButton("REGRESAR");
+		backBtn = new JButton("INICIO");
+		backBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home createWindow = new Home();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		backBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		backBtn.setBounds(128, 326, 125, 21);
+		backBtn.setBounds(128, 364, 125, 21);
 		contentPane.add(backBtn);
 		
 		lblNewLabel_4 = new JLabel("");
@@ -112,6 +120,21 @@ public class RegisterHealthInsurance extends JFrame {
 		lblNewLabel_4.setIcon(new ImageIcon(RegisterHealthInsurance.class.getResource("/img/healthlnsurance.png")));
 		lblNewLabel_4.setBounds(344, 91, 292, 256);
 		contentPane.add(lblNewLabel_4);
+		
+		patientSelect = new JComboBox();
+		patientSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		patientSelect.setBounds(200, 247, 134, 21);
+		contentPane.add(patientSelect);
+		
+		lblNewLabel_5 = new JLabel("Paciente:");
+		lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_5.setBounds(37, 251, 76, 13);
+		contentPane.add(lblNewLabel_5);
+		
+		JComboBox insuranceCompañySelect = new JComboBox();
+		insuranceCompañySelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		insuranceCompañySelect.setModel(new DefaultComboBoxModel(new String[] {"SANITAS", "MAPFRE", "RIMAC", "PACÍFICO", "ONCOSALUD", "LA POSITIVA"}));
+		insuranceCompañySelect.setBounds(200, 157, 134, 21);
+		contentPane.add(insuranceCompañySelect);
 	}
-
 }
