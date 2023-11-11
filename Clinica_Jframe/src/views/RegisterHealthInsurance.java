@@ -17,6 +17,8 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.sql.Connection;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegisterHealthInsurance extends JFrame {
 
@@ -103,7 +105,15 @@ public class RegisterHealthInsurance extends JFrame {
 		registerBtn.setBounds(128, 278, 125, 21);
 		contentPane.add(registerBtn);
 		
-		backBtn = new JButton("REGRESAR");
+		backBtn = new JButton("INICIO");
+		backBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home createWindow = new Home();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		backBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		backBtn.setBounds(128, 326, 125, 21);
 		contentPane.add(backBtn);

@@ -144,18 +144,18 @@ public class RegisterPatient extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
 				String dni = dniField.getText();
-				String birthdate = birthdateField.getText();
+				String dateOfBirth = birthdateField.getText();
 				String gender =(String) genderSelect.getSelectedItem();
 				String address = addressField.getText();
 				String phone = phoneField.getText();
-
+				
 
 				try {
 					String query = "INSERT INTO Patient (name, dni, dateOfBirth, gender, address, phone, MedicalHistory_id) VALUES (?,?,?,?,?,?,?)";
 		            PreparedStatement st = connect.prepareStatement(query);
 		            st.setString(1, name);
 		            st.setString(2, dni);
-		            st.setString(3, birthdate);
+		            st.setString(3, dateOfBirth);
 		            st.setString(4, gender);
 		            st.setString(5, address);
 		            st.setString(6, phone);
@@ -182,6 +182,14 @@ public class RegisterPatient extends JFrame {
 		contentPane.add(registerBtn);
 
 		JButton startBtn = new JButton("INICIO");
+		startBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home createWindow = new Home();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		startBtn.setBounds(91, 361, 114, 21);
 		contentPane.add(startBtn);
