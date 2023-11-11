@@ -6,8 +6,13 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -16,12 +21,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
+
+import model.DBConnection;
 
 public class Home extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private Connection connect;
 
 	/**
 	 * Launch the application.
@@ -44,6 +51,7 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
+		connect = DBConnection.getConnection();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Home.class.getResource("/img/logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 350);
@@ -55,6 +63,7 @@ public class Home extends JFrame {
 		menuBar.add(mnNewMenu);
 
 		JMenuItem showPatient = new JMenuItem("Ver");
+		showPatient.setEnabled(false);
 		showPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -69,7 +78,7 @@ public class Home extends JFrame {
 		registerPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				RegisterQuote createWindow = new RegisterQuote();
+				RegisterPatient createWindow = new RegisterPatient();
 				createWindow.setLocationRelativeTo(null);
 				createWindow.setVisible(true);
 			}
@@ -80,6 +89,7 @@ public class Home extends JFrame {
 		menuBar.add(mnMostrar);
 
 		JMenuItem showDoctor = new JMenuItem("Ver");
+		showDoctor.setEnabled(false);
 		mnMostrar.add(showDoctor);
 
 		JMenuItem registerDoctor = new JMenuItem("Registro");
@@ -92,15 +102,24 @@ public class Home extends JFrame {
 			}
 		});
 		mnMostrar.add(registerDoctor);
-		
-		JMenu mnNewMenu_1 = new JMenu("FACTURA");
-		menuBar.add(mnNewMenu_1);
-		
+
+		JMenu mnInvoice = new JMenu("FACTURA");
+		menuBar.add(mnInvoice);
+
 		JMenuItem showInvoice = new JMenuItem("Ver");
-		mnNewMenu_1.add(showInvoice);
-		
+		showInvoice.setEnabled(false);
+		mnInvoice.add(showInvoice);
+
 		JMenuItem registerInvoice = new JMenuItem("Registro");
-		mnNewMenu_1.add(registerInvoice);
+		registerInvoice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterInvoice createWindow = new RegisterInvoice();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		mnInvoice.add(registerInvoice);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(239, 248, 252));
 		contentPane.setForeground(new Color(239, 248, 252));
@@ -118,24 +137,60 @@ public class Home extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Bienvenido");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 30));
-		lblNewLabel_1.setBounds(20, 39, 327, 58);
+		lblNewLabel_1.setBounds(20, 64, 332, 58);
 		contentPane.add(lblNewLabel_1);
 
 		JLabel lblNewLabel_1_1_1 = new JLabel("CLINICA DEL PILAR");
 		lblNewLabel_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1_1_1.setFont(new Font("Arial", Font.BOLD, 30));
-		lblNewLabel_1_1_1.setBounds(20, 88, 329, 58);
+		lblNewLabel_1_1_1.setBounds(20, 114, 332, 58);
 		contentPane.add(lblNewLabel_1_1_1);
-		
-		JButton reigsterQuoteBtn = new JButton("REGISTRO DE CITA");
-		reigsterQuoteBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		reigsterQuoteBtn.setBounds(20, 183, 329, 23);
-		contentPane.add(reigsterQuoteBtn);
-		
-		JLabel lblNewLabel_2 = new JLabel("Antes de registrar una cita, registrar un paciente y medico.\r\n");
-		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 11));
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setBounds(20, 217, 326, 35);
-		contentPane.add(lblNewLabel_2);
+
+		JLabel alertlbl = new JLabel("");
+		alertlbl.setForeground(new Color(255, 0, 0));
+		alertlbl.setFont(new Font("Arial", Font.PLAIN, 11));
+		alertlbl.setHorizontalAlignment(SwingConstants.CENTER);
+		alertlbl.setBounds(20, 217, 326, 35);
+		contentPane.add(alertlbl);
+
+		JButton reigsterApoinmentBtn = new JButton("REGISTRO DE CITA");
+		reigsterApoinmentBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterAppoinment createWindow = new RegisterAppoinment();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		reigsterApoinmentBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		reigsterApoinmentBtn.setBounds(20, 183, 332, 23);
+		contentPane.add(reigsterApoinmentBtn);
+
+		boolean patientsEmpty = checkIfTableIsEmpty("Patient");
+		boolean doctorsEmpty = checkIfTableIsEmpty("Doctor");
+
+		reigsterApoinmentBtn.setEnabled(!(patientsEmpty || doctorsEmpty));
+
+		alertlbl.setText(
+				(patientsEmpty || doctorsEmpty) ? "Antes de registrar una cita, registrar un paciente y médico." : null);
+
+		mnInvoice.setEnabled(!patientsEmpty);
+	}
+
+	private boolean checkIfTableIsEmpty(String tableName) {
+		boolean isEmpty = false;
+		try {
+			String query = "SELECT COUNT(*) as count FROM " + tableName;
+			PreparedStatement st = connect.prepareStatement(query);
+			ResultSet rs = st.executeQuery();
+
+			if (rs.next()) {
+				int count = rs.getInt("count");
+				isEmpty = count == 0;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return isEmpty;
 	}
 }

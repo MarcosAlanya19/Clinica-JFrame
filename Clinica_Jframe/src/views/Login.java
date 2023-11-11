@@ -94,10 +94,10 @@ public class Login extends JFrame {
 				}
 
 				try {
-					String query = "SELECT * FROM administrative WHERE email = ?";
+
+					String query = "SELECT id, email, password FROM admin WHERE email = ?";
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, username);
-
 					ResultSet rs = st.executeQuery();
 
 					if (rs.next()) {
@@ -158,7 +158,7 @@ public class Login extends JFrame {
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				RegisterAdm createWindow = new RegisterAdm();
+				Register createWindow = new Register();
 				createWindow.setLocationRelativeTo(null);
 				createWindow.setVisible(true);
 			}

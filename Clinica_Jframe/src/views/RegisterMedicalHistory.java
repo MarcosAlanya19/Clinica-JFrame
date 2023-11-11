@@ -15,6 +15,10 @@ import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegisterMedicalHistory extends JFrame {
 
@@ -73,6 +77,14 @@ public class RegisterMedicalHistory extends JFrame {
 		panel.add(registrarBtn);
 		
 		JButton regresarBtn = new JButton("REGRESAR");
+		regresarBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterPatient createWindow = new RegisterPatient();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		regresarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
 		regresarBtn.setBounds(151, 270, 115, 23);
 		panel.add(regresarBtn);
@@ -94,6 +106,12 @@ public class RegisterMedicalHistory extends JFrame {
 		panel.add(lblDescription);
 		
 		ageField = new JTextField();
+		ageField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+			}
+		});
 		ageField.setBounds(96, 109, 170, 20);
 		panel.add(ageField);
 		ageField.setColumns(10);

@@ -1,23 +1,35 @@
 package views;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
 import java.awt.Color;
-import javax.swing.JComboBox;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import org.mindrot.jbcrypt.BCrypt;
+
+import model.DBConnection;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Register extends JFrame {
 
@@ -25,8 +37,9 @@ public class Register extends JFrame {
 	private JPanel contentPane;
 	private JTextField nameField;
 	private JTextField emailField;
+	private Connection connect;
 	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
+	private JPasswordField passwordVerifyField;
 
 	/**
 	 * Launch the application.
@@ -49,6 +62,8 @@ public class Register extends JFrame {
 	 * Create the frame.
 	 */
 	public Register() {
+		setBackground(new Color(255, 255, 255));
+		connect = DBConnection.getConnection();
 		setTitle("CLINICA DEL PILAR");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/img/logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,24 +75,105 @@ public class Register extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JComboBox<String> postSelect = new JComboBox<String>();
+		postSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		postSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Administrador", "Medico" }));
+		postSelect.setToolTipText("");
+		postSelect.setBounds(168, 263, 181, 22);
+		contentPane.add(postSelect);
+		
 		JLabel lblNewLabel = new JLabel("REGISTRO");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
 		lblNewLabel.setBounds(181, 11, 273, 71);
 		contentPane.add(lblNewLabel);
 		
-		JButton registroBtn = new JButton("REGISTRO");
-		registroBtn.addActionListener(new ActionListener() {
+		JButton registrarBtn = new JButton("REGISTRAR");
+		registrarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String name = nameField.getText();
+				String email = emailField.getText();
+
+				String password = String.valueOf(passwordField.getPassword());
+				String hashedPassword = hashPassword(password);
+				String verifyPassword = String.valueOf(passwordVerifyField.getPassword());
+
+				String selectedRol = (String) postSelect.getSelectedItem();
+				
+				if (name.isEmpty() || email.isEmpty() || password.isEmpty() || selectedRol.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
+					return;
+				}
+				
+				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+				Pattern pattern = Pattern.compile(emailRegex);
+				Matcher matcher = pattern.matcher(email);
+
+				if (!matcher.matches()) {
+					JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
+					emailField.setText(null);
+					return;
+				}
+				
+				if (matcher.matches()) {
+					if (emailExist(email)) {
+						JOptionPane.showMessageDialog(null, "El email ya ha sido registrado. Por favor, ingrese otro email.");
+						return;}
+				}
+				
+				try {
+					String query = "INSERT INTO admin (name, email, password, rol) VALUES (?,?,?,?)";
+					PreparedStatement st = connect.prepareStatement(query);
+					st.setString(1, name);
+					st.setString(2, email);
+					st.setString(3, hashedPassword);
+					st.setString(4, selectedRol);
+					st.executeUpdate();
+					
+					System.out.println(selectedRol);
+
+					JOptionPane.showMessageDialog(null, "Usuario registrado correctamente");
+					nameField.setText(null);
+					emailField.setText(null);
+					passwordField.setText(null);
+					passwordVerifyField.setText(null); 
+					
+				} catch (Exception err) {
+					err.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error en el servidor");
+				}
+				
+            }
+
+			private static String hashPassword(String password) {
+				return BCrypt.hashpw(password, BCrypt.gensalt());
+	        }
+
+			private boolean emailExist(String email) {
+				try {
+					String sql = "SELECT email FROM admin WHERE email = ?";
+					PreparedStatement statement = connect.prepareStatement(sql);
+					statement.setString(1, email);
+					ResultSet result = statement.executeQuery();
+					return result.next();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
 			}
 		});
-		registroBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-		registroBtn.setBounds(141, 312, 126, 23);
-		contentPane.add(registroBtn);
+		registrarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+		registrarBtn.setBounds(141, 312, 126, 23);
+		contentPane.add(registrarBtn);
 		
 		JButton inicioBtn = new JButton("INICIA SESION");
 		inicioBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				dispose();
+				Login createWindow = new Login();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
 			}
 		});
 		inicioBtn.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -102,6 +198,23 @@ public class Register extends JFrame {
 		contentPane.add(lblName);
 		
 		nameField = new JTextField();
+		nameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean mayusculas = key >= 65 && key <= 90;
+					boolean minusculas = key >= 97 && key <= 122;
+					boolean espacio = key == 32;
+
+					if (!(minusculas || mayusculas || espacio)) {
+						e.consume();
+					}
+				} catch (Exception c) {
+				}
+			}
+		});
 		nameField.setFont(new Font("Arial", Font.PLAIN, 14));
 		nameField.setBounds(170, 122, 176, 20);
 		contentPane.add(nameField);
@@ -131,13 +244,6 @@ public class Register extends JFrame {
 		lblPost.setBounds(68, 263, 84, 23);
 		contentPane.add(lblPost);
 		
-		JComboBox<String> postSelect = new JComboBox<String>();
-		postSelect.setFont(new Font("Arial", Font.PLAIN, 14));
-		postSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Administrador", "Medico" }));
-		postSelect.setToolTipText("");
-		postSelect.setBounds(168, 263, 181, 22);
-		contentPane.add(postSelect);
-		
 		passwordField = new JPasswordField();
 		passwordField.setBounds(168, 193, 178, 20);
 		contentPane.add(passwordField);
@@ -148,8 +254,10 @@ public class Register extends JFrame {
 		lblPasword_1.setBounds(68, 225, 84, 23);
 		contentPane.add(lblPasword_1);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(168, 227, 178, 20);
-		contentPane.add(passwordField_1);
+		passwordVerifyField = new JPasswordField();
+		passwordVerifyField.setBounds(168, 227, 178, 20);
+		contentPane.add(passwordVerifyField);
+		
+		
 	}
 }
