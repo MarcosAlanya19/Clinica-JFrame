@@ -74,6 +74,33 @@ public class RegisterMedical extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JButton asignarRecursosBtn = new JButton("<html>ASIGNAR<br>RECURSOS</html>");
+		asignarRecursosBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterResource createWindow = new RegisterResource();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		asignarRecursosBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		asignarRecursosBtn.setBounds(341, 346, 107, 54);
+		contentPane.add(asignarRecursosBtn);
+		
+		JButton asignarHorariosBtn = new JButton("<html>ASIGNAR<br>HORARIOS</html>");
+		asignarHorariosBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterSchedules createWindow = new RegisterSchedules();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		asignarHorariosBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		asignarHorariosBtn.setBounds(490, 346, 107, 54);
+		contentPane.add(asignarHorariosBtn);
+
 
 		JButton registroBtn = new JButton("REGISTRO");
 		registroBtn.addActionListener(new ActionListener() {
@@ -124,6 +151,9 @@ public class RegisterMedical extends JFrame {
 					phoneField.setText(null);
 					emailField.setText(null);
 					addressField.setText(null);
+					
+					asignarHorariosBtn.setEnabled(true);
+					asignarRecursosBtn.setEnabled(true);
 
 				} catch (Exception err) {
 					err.printStackTrace();
@@ -161,19 +191,6 @@ public class RegisterMedical extends JFrame {
 		inicioBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		inicioBtn.setBounds(210, 274, 89, 23);
 		contentPane.add(inicioBtn);
-
-		JButton asignarRecursosBtn = new JButton("<html>ASIGNAR<br>RECURSOS</html>");
-		asignarRecursosBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				RegisterResource createWindow = new RegisterResource();
-				createWindow.setLocationRelativeTo(null);
-				createWindow.setVisible(true);
-			}
-		});
-		asignarRecursosBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		asignarRecursosBtn.setBounds(341, 346, 107, 54);
-		contentPane.add(asignarRecursosBtn);
 
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(RegisterMedical.class.getResource("/img/registerMedical.png")));
@@ -262,19 +279,6 @@ public class RegisterMedical extends JFrame {
 		lblAddress.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblAddress.setBounds(40, 222, 68, 17);
 		contentPane.add(lblAddress);
-
-		JButton asignarHorariosBtn = new JButton("<html>ASIGNAR<br>HORARIOS</html>");
-		asignarHorariosBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				RegisterSchedules createWindow = new RegisterSchedules();
-				createWindow.setLocationRelativeTo(null);
-				createWindow.setVisible(true);
-			}
-		});
-		asignarHorariosBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		asignarHorariosBtn.setBounds(490, 346, 107, 54);
-		contentPane.add(asignarHorariosBtn);
 
 		boolean doctorsEmpty = checkIfTableIsEmpty("Doctor");
 

@@ -105,7 +105,7 @@ public class Register extends JFrame {
 					return;
 				}
 
-				if (password.contentEquals(verifyPassword)) {
+				if (!password.contentEquals(verifyPassword)) {
 					JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
 					return;
 				}

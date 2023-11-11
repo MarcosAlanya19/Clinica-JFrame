@@ -10,11 +10,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,11 +25,11 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
-import model.DBConnection;
-import javax.swing.JComboBox;
 import com.toedter.calendar.JDateChooser;
 
 import contructor.Patient;
+import model.DBConnection;
+import javax.swing.SwingConstants;
 
 public class RegisterInvoice extends JFrame {
 
@@ -81,7 +83,7 @@ public class RegisterInvoice extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel("Total:");
 		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_2.setBounds(32, 230, 45, 13);
+		lblNewLabel_2.setBounds(32, 184, 45, 13);
 		contentPane.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_5 = new JLabel("Detalle:");
@@ -90,12 +92,12 @@ public class RegisterInvoice extends JFrame {
 		contentPane.add(lblNewLabel_5);
 
 		totalField = new JTextField();
-		totalField.setBounds(141, 246, 182, 19);
+		totalField.setBounds(141, 182, 182, 19);
 		contentPane.add(totalField);
 		totalField.setColumns(10);
 
 		JTextPane detailField = new JTextPane();
-		detailField.setBounds(141, 275, 182, 69);
+		detailField.setBounds(141, 250, 182, 69);
 		contentPane.add(detailField);
 
 		JLabel lblNewLabel_6 = new JLabel("");
@@ -118,9 +120,11 @@ public class RegisterInvoice extends JFrame {
 		issueDate.setBounds(141, 137, 182, 19);
 		contentPane.add(issueDate);
 
-		JLabel label = new JLabel("New label");
-		label.setBounds(554, 359, 45, 13);
-		contentPane.add(label);
+		JLabel subTotalLabel = new JLabel("");
+		subTotalLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		subTotalLabel.setFont(new Font("Arial", Font.BOLD, 9));
+		subTotalLabel.setBounds(278, 211, 45, 13);
+		contentPane.add(subTotalLabel);
 
 		JButton startBtn = new JButton("INICIO");
 		startBtn.addActionListener(new ActionListener() {
@@ -132,7 +136,7 @@ public class RegisterInvoice extends JFrame {
 			}
 		});
 		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		startBtn.setBounds(56, 354, 116, 21);
+		startBtn.setBounds(430, 344, 116, 21);
 		contentPane.add(startBtn);
 
 		JButton registerBtn = new JButton("REGISTRO");
@@ -168,8 +172,31 @@ public class RegisterInvoice extends JFrame {
 				}
 			}
 		});
-		registerBtn.setBounds(220, 354, 116, 21);
+		registerBtn.setBounds(152, 344, 116, 21);
 		contentPane.add(registerBtn);
+
+		JLabel igvLabel = new JLabel("");
+		igvLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		igvLabel.setFont(new Font("Arial", Font.BOLD, 9));
+		igvLabel.setBounds(278, 227, 45, 13);
+		contentPane.add(igvLabel);
+
+		JButton calculateBtn = new JButton("CALCULAR");
+		calculateBtn.setFont(new Font("Arial", Font.BOLD, 8));
+		calculateBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DecimalFormat df = new DecimalFormat("#.##");
+				double total = Double.parseDouble(totalField.getText());
+				double subtotal = total / 1.18;
+				double igv = subtotal * 0.18;
+				String subTotalDecimal = df.format(subtotal);
+				String igvDecimal = df.format(igv);
+				subTotalLabel.setText(subTotalDecimal);
+				igvLabel.setText(igvDecimal);
+			}
+		});
+		calculateBtn.setBounds(141, 211, 89, 19);
+		contentPane.add(calculateBtn);
 	}
 
 	private void showPatientSelect() {
