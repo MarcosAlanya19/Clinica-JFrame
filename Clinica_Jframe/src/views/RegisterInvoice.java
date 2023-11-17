@@ -23,13 +23,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
-import com.toedter.calendar.JDateChooser;
 
 import contructor.Patient;
 import model.DBConnection;
-import javax.swing.SwingConstants;
 
 public class RegisterInvoice extends JFrame {
 
@@ -76,11 +74,6 @@ public class RegisterInvoice extends JFrame {
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
 		contentPane.add(lblNewLabel);
 
-		JLabel lblNewLabel_1 = new JLabel("Fecha emision:");
-		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(32, 137, 130, 13);
-		contentPane.add(lblNewLabel_1);
-
 		JLabel lblNewLabel_2 = new JLabel("Total:");
 		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_2.setBounds(32, 184, 45, 13);
@@ -116,10 +109,6 @@ public class RegisterInvoice extends JFrame {
 		patientSelect.setBounds(141, 88, 182, 21);
 		contentPane.add(patientSelect);
 
-		JDateChooser issueDate = new JDateChooser();
-		issueDate.setBounds(141, 137, 182, 19);
-		contentPane.add(issueDate);
-
 		JLabel subTotalLabel = new JLabel("");
 		subTotalLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		subTotalLabel.setFont(new Font("Arial", Font.BOLD, 9));
@@ -146,9 +135,9 @@ public class RegisterInvoice extends JFrame {
 				String total = totalField.getText();
 				String detail = detailField.getText();
 
-				Date selectedDate = issueDate.getDate();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String formattedDate = sdf.format(selectedDate);
+				Date currentDate = new Date();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedDate = dateFormat.format(currentDate);
 
 				Patient selectedPatient = (Patient) patientSelect.getSelectedItem();
 				int patientId = selectedPatient.getId();
@@ -191,8 +180,8 @@ public class RegisterInvoice extends JFrame {
 				double igv = subtotal * 0.18;
 				String subTotalDecimal = df.format(subtotal);
 				String igvDecimal = df.format(igv);
-				subTotalLabel.setText(subTotalDecimal);
-				igvLabel.setText(igvDecimal);
+				subTotalLabel.setText("Sub Total: "+subTotalDecimal);
+				igvLabel.setText("IGV: "+igvDecimal);
 			}
 		});
 		calculateBtn.setBounds(141, 211, 89, 19);

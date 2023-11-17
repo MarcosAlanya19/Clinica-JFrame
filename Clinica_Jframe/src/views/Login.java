@@ -75,6 +75,25 @@ public class Login extends JFrame {
 		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_1.setBounds(63, 104, 113, 14);
 		contentPane.add(lblNewLabel_1);
+		
+		JLabel errEmail = new JLabel("");
+		errEmail.setFont(new Font("Arial", Font.PLAIN, 10));
+		errEmail.setForeground(new Color(255, 0, 0));
+		errEmail.setBounds(184, 119, 135, 14);
+		contentPane.add(errEmail);
+		
+		JLabel errPassword = new JLabel("");
+		errPassword.setFont(new Font("Arial", Font.PLAIN, 10));
+		errPassword.setForeground(Color.RED);
+		errPassword.setBounds(184, 162, 135, 14);
+		contentPane.add(errPassword);
+		
+		JLabel errAll = new JLabel("");
+		errAll.setFont(new Font("Arial", Font.PLAIN, 11));
+		errAll.setHorizontalAlignment(SwingConstants.CENTER);
+		errAll.setForeground(Color.RED);
+		errAll.setBounds(63, 79, 256, 14);
+		contentPane.add(errAll);
 
 		JButton btnNewButton = new JButton("INICIO");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -82,19 +101,29 @@ public class Login extends JFrame {
 				String username = usernameField.getText();
 				char[] passwordChars = passwordField.getPassword();
 				String password = new String(passwordChars);
-
-				if (username.isEmpty() || password.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Por favor, ingrese tanto el nombre de usuario como la contraseña.");
+				
+				if (username.isEmpty()) {
+					errEmail.setText("Campo Obligatorio");
 					return;
+				} else {
+					errEmail.setText(null);
 				}
-
+				
 				if (!isValidEmail(username)) {
-					JOptionPane.showMessageDialog(null, "Por favor, ingrese un correo electrónico válido.");
+					errEmail.setText("Correo no valido");
 					return;
+				} else {
+					errEmail.setText(null);
+				}
+				
+				if (password.isEmpty()) {
+					errPassword.setText("Campo Obligatorio");
+					return;
+				} else {
+					errPassword.setText(null);
 				}
 
 				try {
-
 					String query = "SELECT id, email, password FROM admin WHERE email = ?";
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, username);
@@ -110,17 +139,17 @@ public class Login extends JFrame {
 							createWindow.setLocationRelativeTo(null);
 							createWindow.setVisible(true);
 						} else {
-							JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+							errAll.setText("Contraseña incorrecta");
 						}
 					} else {
-						JOptionPane.showMessageDialog(null, "Usuario no encontrado");
+						errAll.setText("Usuario no encontrado");
 					}
 
 					st.close();
 
 				} catch (Exception e2) {
 					e2.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Ha ocurrido un error durante la autenticación.");
+					errAll.setText("Error Autentificación");
 				}
 			}
 
@@ -131,15 +160,17 @@ public class Login extends JFrame {
 
 		});
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 14));
-		btnNewButton.setBounds(148, 182, 89, 23);
+		btnNewButton.setBounds(157, 187, 89, 23);
 		contentPane.add(btnNewButton);
 
 		JLabel lblNewLabel_1_1 = new JLabel("Contraseña:");
 		lblNewLabel_1_1.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_1_1.setBounds(63, 141, 113, 14);
+		lblNewLabel_1_1.setBounds(63, 145, 113, 14);
 		contentPane.add(lblNewLabel_1_1);
 
 		usernameField = new JTextField();
+		usernameField.setForeground(new Color(0, 0, 0));
+		usernameField.setBackground(new Color(255, 255, 255));
 		usernameField.setBounds(184, 102, 135, 20);
 		contentPane.add(usernameField);
 		usernameField.setColumns(10);
@@ -170,7 +201,8 @@ public class Login extends JFrame {
 		contentPane.add(registerBtn);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(184, 139, 135, 20);
+		passwordField.setBounds(184, 143, 135, 20);
 		contentPane.add(passwordField);
+	
 	}
 }

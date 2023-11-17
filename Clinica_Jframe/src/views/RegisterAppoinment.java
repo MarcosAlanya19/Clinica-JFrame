@@ -77,38 +77,71 @@ public class RegisterAppoinment extends JFrame {
 
 		patientSelect = new JComboBox<Object>();
 		showPatientSelect();
-		patientSelect.setBounds(148, 217, 166, 22);
+		patientSelect.setBounds(148, 235, 166, 22);
 		contentPane.add(patientSelect);
 
 		doctorSelect = new JComboBox<Object>();
 		showDoctorSelect();
 		doctorSelect.setFont(new Font("Arial", Font.BOLD, 14));
-		doctorSelect.setBounds(148, 252, 166, 22);
+		doctorSelect.setBounds(148, 282, 166, 22);
 		contentPane.add(doctorSelect);
 
 		JDateChooser dateField = new JDateChooser();
-		dateField.setBounds(148, 108, 166, 20);
+		dateField.setBounds(148, 93, 166, 20);
+		dateField.setDate(new java.util.Date());
+		dateField.setMinSelectableDate(new java.util.Date());
 		contentPane.add(dateField);
 
 		JTextArea descriptionField = new JTextArea();
 		descriptionField.setBounds(148, 139, 166, 67);
 		contentPane.add(descriptionField);
 
+		JLabel errDescription = new JLabel("");
+		errDescription.setForeground(new Color(255, 0, 0));
+		errDescription.setFont(new Font("Arial", Font.PLAIN, 9));
+		errDescription.setBounds(148, 210, 166, 14);
+		contentPane.add(errDescription);
+
+		JLabel errPatient = new JLabel("");
+		errPatient.setForeground(Color.RED);
+		errPatient.setFont(new Font("Arial", Font.PLAIN, 9));
+		errPatient.setBounds(148, 257, 166, 14);
+		contentPane.add(errPatient);
+
+		JLabel errDoctor = new JLabel("");
+		errDoctor.setForeground(Color.RED);
+		errDoctor.setFont(new Font("Arial", Font.PLAIN, 9));
+		errDoctor.setBounds(148, 307, 166, 14);
+		contentPane.add(errDoctor);
+
+		JLabel errDate = new JLabel("");
+		errDate.setForeground(Color.RED);
+		errDate.setFont(new Font("Arial", Font.PLAIN, 9));
+		errDate.setBounds(148, 114, 166, 14);
+		contentPane.add(errDate);
+
 		JButton registerAppointmentBtn = new JButton("REGISTRO");
 		registerAppointmentBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		registerAppointmentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Date selectedDate = dateField.getDate();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedDate = sdf.format(selectedDate);
+
 				String description = descriptionField.getText();
+
+				if (description.isEmpty()) {
+					errDescription.setText("Campo obligatorio");
+					return;
+				} else {
+					errDescription.setText(null);
+				}
 
 				Patient selectedPatient = (Patient) patientSelect.getSelectedItem();
 				int patientId = selectedPatient.getId();
 
 				Doctor selectedDoctor = (Doctor) doctorSelect.getSelectedItem();
 				int doctorId = selectedDoctor.getId();
-
-				Date selectedDate = dateField.getDate();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String formattedDate = sdf.format(selectedDate);
 
 				try {
 					String query = "INSERT INTO Appointment (date, description, status, Doctor_id, Patient_id) VALUES (?, ?, ?, ?, ?)";
@@ -129,12 +162,12 @@ public class RegisterAppoinment extends JFrame {
 				}
 			}
 		});
-		registerAppointmentBtn.setBounds(119, 303, 113, 23);
+		registerAppointmentBtn.setBounds(108, 330, 113, 23);
 		contentPane.add(registerAppointmentBtn);
 
 		JLabel dateLbl = new JLabel("Fecha:");
 		dateLbl.setFont(new Font("Arial", Font.PLAIN, 14));
-		dateLbl.setBounds(36, 108, 102, 14);
+		dateLbl.setBounds(36, 93, 102, 14);
 		contentPane.add(dateLbl);
 
 		JLabel descriptionLbl = new JLabel("Descripción:");
@@ -144,12 +177,12 @@ public class RegisterAppoinment extends JFrame {
 
 		JLabel patientLbl = new JLabel("Paciente:");
 		patientLbl.setFont(new Font("Arial", Font.PLAIN, 14));
-		patientLbl.setBounds(36, 220, 102, 14);
+		patientLbl.setBounds(36, 238, 102, 14);
 		contentPane.add(patientLbl);
 
 		JLabel doctorLbl = new JLabel("Doctor:");
 		doctorLbl.setFont(new Font("Arial", Font.PLAIN, 14));
-		doctorLbl.setBounds(36, 255, 102, 14);
+		doctorLbl.setBounds(36, 286, 102, 14);
 		contentPane.add(doctorLbl);
 
 		JButton btnInicio = new JButton("INICIO");
@@ -162,7 +195,7 @@ public class RegisterAppoinment extends JFrame {
 			}
 		});
 		btnInicio.setFont(new Font("Arial", Font.BOLD, 14));
-		btnInicio.setBounds(119, 339, 113, 23);
+		btnInicio.setBounds(108, 364, 113, 23);
 		contentPane.add(btnInicio);
 
 		JLabel lblNewLabel_1 = new JLabel("");
@@ -170,6 +203,13 @@ public class RegisterAppoinment extends JFrame {
 		lblNewLabel_1.setIcon(new ImageIcon(RegisterAppoinment.class.getResource("/img/appoinment.png")));
 		lblNewLabel_1.setBounds(337, 93, 287, 270);
 		contentPane.add(lblNewLabel_1);
+
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setForeground(new Color(255, 0, 0));
+		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblNewLabel_2.setBounds(36, 64, 278, 14);
+		contentPane.add(lblNewLabel_2);
 	}
 
 	private void showPatientSelect() {
@@ -181,7 +221,7 @@ public class RegisterAppoinment extends JFrame {
 
 			while (rs.next()) {
 				int id = rs.getInt("id");
-				String name = String.format("Dr. %s", rs.getString("name"));
+				String name = rs.getString("name");
 				Patient patient = new Patient(id, name);
 				patientSelect.addItem(patient);
 			}
@@ -200,7 +240,7 @@ public class RegisterAppoinment extends JFrame {
 
 			while (rs.next()) {
 				int id = rs.getInt("id");
-				String name = rs.getString("name");
+				String name = String.format("Dr. %s", rs.getString("name"));
 				Doctor doctor = new Doctor(id, name);
 				doctorSelect.addItem(doctor);
 			}
