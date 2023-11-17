@@ -7,27 +7,35 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import contructor.Patient;
 import model.DBConnection;
 
 public class RegisterInvoice extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField issueField;
-	private JTextField rucField;
-	private JTextField reasonField;
 	private JTextField totalField;
 	private Connection connect;
+	JComboBox<Object> patientSelect;
 
 	/**
 	 * Launch the application.
@@ -60,78 +68,142 @@ public class RegisterInvoice extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblNewLabel = new JLabel("REGISTRO FACTURA");
 		lblNewLabel.setBounds(163, 10, 374, 30);
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
 		contentPane.add(lblNewLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("Fecha emision:");
-		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(32, 78, 130, 13);
-		contentPane.add(lblNewLabel_1);
-		
+
 		JLabel lblNewLabel_2 = new JLabel("Total:");
 		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_2.setBounds(32, 212, 45, 13);
+		lblNewLabel_2.setBounds(32, 184, 45, 13);
 		contentPane.add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_3 = new JLabel("Razón social:");
-		lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_3.setBounds(32, 166, 99, 13);
-		contentPane.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_4 = new JLabel("RUC:");
-		lblNewLabel_4.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_4.setBounds(32, 122, 45, 13);
-		contentPane.add(lblNewLabel_4);
-		
+
 		JLabel lblNewLabel_5 = new JLabel("Detalle:");
 		lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_5.setBounds(32, 253, 83, 13);
+		lblNewLabel_5.setBounds(32, 263, 83, 13);
 		contentPane.add(lblNewLabel_5);
-		
-		issueField = new JTextField();
-		issueField.setBounds(142, 76, 182, 19);
-		contentPane.add(issueField);
-		issueField.setColumns(10);
-		
-		rucField = new JTextField();
-		rucField.setBounds(142, 120, 182, 19);
-		contentPane.add(rucField);
-		rucField.setColumns(10);
-		
-		reasonField = new JTextField();
-		reasonField.setBounds(141, 164, 182, 19);
-		contentPane.add(reasonField);
-		reasonField.setColumns(10);
-		
+
 		totalField = new JTextField();
-		totalField.setBounds(142, 210, 182, 19);
+		totalField.setBounds(141, 182, 182, 19);
 		contentPane.add(totalField);
 		totalField.setColumns(10);
-		
-		JTextPane detailTextPane = new JTextPane();
-		detailTextPane.setBounds(142, 253, 182, 69);
-		contentPane.add(detailTextPane);
-		
-		JButton startBtn = new JButton("INICIO");
-		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		startBtn.setBounds(228, 354, 116, 21);
-		contentPane.add(startBtn);
-		
-		JButton registerBtn = new JButton("REGISTRO");
-		registerBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		registerBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		registerBtn.setBounds(68, 354, 116, 21);
-		contentPane.add(registerBtn);
-		
+
+		JTextPane detailField = new JTextPane();
+		detailField.setBounds(141, 250, 182, 69);
+		contentPane.add(detailField);
+
 		JLabel lblNewLabel_6 = new JLabel("");
 		lblNewLabel_6.setIcon(new ImageIcon(RegisterInvoice.class.getResource("/img/invoice.png")));
 		lblNewLabel_6.setBounds(355, 50, 308, 297);
 		contentPane.add(lblNewLabel_6);
+
+		JLabel lblNewLabel_7 = new JLabel("Paciente:");
+		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_7.setBounds(32, 92, 83, 13);
+		contentPane.add(lblNewLabel_7);
+
+		patientSelect = new JComboBox<Object>();
+		showPatientSelect();
+		patientSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		patientSelect.setBounds(141, 88, 182, 21);
+		contentPane.add(patientSelect);
+
+		JLabel subTotalLabel = new JLabel("");
+		subTotalLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		subTotalLabel.setFont(new Font("Arial", Font.BOLD, 9));
+		subTotalLabel.setBounds(278, 211, 45, 13);
+		contentPane.add(subTotalLabel);
+
+		JButton startBtn = new JButton("INICIO");
+		startBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home createWindow = new Home();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		startBtn.setBounds(430, 344, 116, 21);
+		contentPane.add(startBtn);
+
+		JButton registerBtn = new JButton("REGISTRO");
+		registerBtn.setFont(new Font("Arial", Font.BOLD, 14));
+		registerBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String total = totalField.getText();
+				String detail = detailField.getText();
+
+				Date currentDate = new Date();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String formattedDate = dateFormat.format(currentDate);
+
+				Patient selectedPatient = (Patient) patientSelect.getSelectedItem();
+				int patientId = selectedPatient.getId();
+
+				try {
+					String query = "INSERT INTO Invoice (issueDate, total, businessName, ruc, detail, Patient_id) VALUES (?, ?, ?, ?, ?,?)";
+					PreparedStatement st = connect.prepareStatement(query);
+					st.setString(1, formattedDate);
+					st.setString(2, total);
+					st.setString(3, "Clinica Maria del Pilar");
+					st.setString(4, "20602477925");
+					st.setString(5, detail);
+					st.setLong(6, patientId);
+					st.executeUpdate();
+
+					JOptionPane.showMessageDialog(null, "Factura registrada correctamente");
+
+				} catch (Exception err) {
+					err.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error en el servidor");
+				}
+			}
+		});
+		registerBtn.setBounds(152, 344, 116, 21);
+		contentPane.add(registerBtn);
+
+		JLabel igvLabel = new JLabel("");
+		igvLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		igvLabel.setFont(new Font("Arial", Font.BOLD, 9));
+		igvLabel.setBounds(278, 227, 45, 13);
+		contentPane.add(igvLabel);
+
+		JButton calculateBtn = new JButton("CALCULAR");
+		calculateBtn.setFont(new Font("Arial", Font.BOLD, 8));
+		calculateBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DecimalFormat df = new DecimalFormat("#.##");
+				double total = Double.parseDouble(totalField.getText());
+				double subtotal = total / 1.18;
+				double igv = subtotal * 0.18;
+				String subTotalDecimal = df.format(subtotal);
+				String igvDecimal = df.format(igv);
+				subTotalLabel.setText("Sub Total: "+subTotalDecimal);
+				igvLabel.setText("IGV: "+igvDecimal);
+			}
+		});
+		calculateBtn.setBounds(141, 211, 89, 19);
+		contentPane.add(calculateBtn);
+	}
+
+	private void showPatientSelect() {
+		try {
+			String query = "SELECT id, name FROM Patient";
+			PreparedStatement st = connect.prepareStatement(query);
+			ResultSet rs = st.executeQuery();
+			patientSelect.removeAllItems();
+
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				Patient patient = new Patient(id, name);
+				patientSelect.addItem(patient);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

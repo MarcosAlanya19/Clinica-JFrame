@@ -63,11 +63,10 @@ public class Home extends JFrame {
 		menuBar.add(mnNewMenu);
 
 		JMenuItem showPatient = new JMenuItem("Ver");
-		showPatient.setEnabled(false);
 		showPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				RegisterSpeciality createWindow = new RegisterSpeciality();
+				ShowPatient createWindow = new ShowPatient();
 				createWindow.setLocationRelativeTo(null);
 				createWindow.setVisible(true);
 			}
@@ -84,11 +83,44 @@ public class Home extends JFrame {
 			}
 		});
 		mnNewMenu.add(registerPatient);
+		
+		JMenu mnNewMenu_1 = new JMenu("SEGURO DE VIDA");
+		menuBar.add(mnNewMenu_1);
+		
+		JMenuItem showHelath = new JMenuItem("Ver");
+		showHelath.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				ShowHealth createWindow = new ShowHealth();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		mnNewMenu_1.add(showHelath);
+		
+		JMenuItem registerHealt = new JMenuItem("Registro");
+		registerHealt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				RegisterHealthInsurance createWindow = new RegisterHealthInsurance();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
+		mnNewMenu_1.add(registerHealt);
 
 		JMenu mnMostrar = new JMenu("MEDICO");
 		menuBar.add(mnMostrar);
 
 		JMenuItem showDoctor = new JMenuItem("Ver");
+		showDoctor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				ShowDoctor createWindow = new ShowDoctor();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		showDoctor.setEnabled(false);
 		mnMostrar.add(showDoctor);
 
@@ -107,6 +139,14 @@ public class Home extends JFrame {
 		menuBar.add(mnInvoice);
 
 		JMenuItem showInvoice = new JMenuItem("Ver");
+		showInvoice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				ShowInvoice createWindow = new ShowInvoice();
+				createWindow.setLocationRelativeTo(null);
+				createWindow.setVisible(true);
+			}
+		});
 		showInvoice.setEnabled(false);
 		mnInvoice.add(showInvoice);
 
@@ -168,9 +208,16 @@ public class Home extends JFrame {
 
 		boolean patientsEmpty = checkIfTableIsEmpty("Patient");
 		boolean doctorsEmpty = checkIfTableIsEmpty("Doctor");
-
+		boolean invoicesEmpty = checkIfTableIsEmpty("Invoice");
+		boolean healthEmpty = checkIfTableIsEmpty("healthinsurance");
+		
+		showHelath.setEnabled(!healthEmpty);
+		showPatient.setEnabled(!patientsEmpty);
+		showDoctor.setEnabled(!doctorsEmpty);
+		showInvoice.setEnabled(!invoicesEmpty);
+		
 		reigsterApoinmentBtn.setEnabled(!(patientsEmpty || doctorsEmpty));
-
+		
 		alertlbl.setText(
 				(patientsEmpty || doctorsEmpty) ? "Antes de registrar una cita, registrar un paciente y médico." : null);
 
