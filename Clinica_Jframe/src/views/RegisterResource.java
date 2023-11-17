@@ -135,7 +135,7 @@ public class RegisterResource extends JFrame {
 		contentPane.add(lblDoctor);
 		
 		JComboBox<String> Doctor_idSelect = new JComboBox<String>();
-		Doctor_idSelect.setModel(new DefaultComboBoxModel<String>(new String[] {"Disponible", "ocupado"}));
+		Doctor_idSelect.setModel(new DefaultComboBoxModel<String>(new String[] {"", ""}));
 		Doctor_idSelect.setToolTipText("");
 		Doctor_idSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		Doctor_idSelect.setBounds(123, 211, 170, 22);
