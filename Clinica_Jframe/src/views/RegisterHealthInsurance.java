@@ -25,6 +25,8 @@ import javax.swing.border.EmptyBorder;
 
 import contructor.Patient;
 import model.DBConnection;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegisterHealthInsurance extends JFrame {
 
@@ -95,6 +97,25 @@ public class RegisterHealthInsurance extends JFrame {
 		contentPane.add(lblNewLabel_3);
 		
 		policyField = new JTextField();
+		policyField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean numeros = key >= 48 && key <= 57;
+
+					if (!numeros) {
+						e.consume();
+					}
+
+					if (policyField.getText().trim().length() == 9) {
+						e.consume();
+					}
+				} catch (Exception b) {
+				}
+			}
+		});
 		policyField.setBounds(200, 112, 134, 19);
 		contentPane.add(policyField);
 		policyField.setColumns(10);
