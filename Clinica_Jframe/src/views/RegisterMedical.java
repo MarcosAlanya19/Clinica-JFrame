@@ -101,38 +101,89 @@ public class RegisterMedical extends JFrame {
 		asignarHorariosBtn.setBounds(490, 346, 107, 54);
 		contentPane.add(asignarHorariosBtn);
 
-
+		JLabel errorAddress = new JLabel("");
+		errorAddress.setForeground(Color.RED);
+		errorAddress.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorAddress.setBounds(139, 295, 166, 14);
+		contentPane.add(errorAddress);
+		
+		
+		JLabel erName = new JLabel("");
+		erName.setForeground(Color.RED);
+		erName.setFont(new Font("Arial", Font.PLAIN, 9));
+		erName.setBounds(139, 157, 166, 14);
+		contentPane.add(erName);
+		
+		JLabel errorPhone = new JLabel("");
+		errorPhone.setForeground(new Color(255, 0, 0));
+		errorPhone.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorPhone.setBounds(139, 204, 166, 14);
+		contentPane.add(errorPhone);
+		
+		JLabel errorEmail = new JLabel("");
+		errorEmail.setForeground(new Color(255, 0, 0));
+		errorEmail.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorEmail.setBounds(139, 251, 166, 14);
+		contentPane.add(errorEmail);
+		
 		JButton registroBtn = new JButton("REGISTRO");
 		registroBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				String name = nameField.getText();
+				
+				if (name.isEmpty()) {
+					erName.setText("Campo Obligatorio");
+					
+				} else {
+					erName.setText(null);
+				}
+				
 				String phone = phoneField.getText();
+				
+				if (phone.isEmpty()) {
+					errorPhone.setText("Campo Obligatorio");
+					
+				} else {
+					errorPhone.setText(null);
+				}
+				
 				String email = emailField.getText();
+				
+				if (email.isEmpty()) {
+					errorEmail.setText("Campo Obligatorio");
+				} else {
+					errorEmail.setText(null);
+				}
+				
 				String address = addressField.getText();
-
-				if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
+				
+				if (address.isEmpty()) {
+					errorAddress.setText("Campo Obligatorio");
 					return;
+				} else {
+					errorAddress.setText(null);
 				}
 
 				if (phone.length() != 9) {
-					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar solo 9 digitos");
-					return;
+					errorPhone.setText("El celular es incorrecto. asegurese de ingresar solo 9 digitos");
+					
 				}
 
 				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+				
+				
 				Pattern pattern = Pattern.compile(emailRegex);
 				Matcher matcher = pattern.matcher(email);
-
+				
 				if (!matcher.matches()) {
-					JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
+					errorEmail.setText("El correo electrónico no es válido");
 					emailField.setText(null);
-					return;
 				}
 
 				if (matcher.matches()) {
 					if (emailExist(email)) {
-						JOptionPane.showMessageDialog(null, "El email ya ha sido registrado. Por favor, ingrese otro email.");
+						errorEmail.setText("El email ya ha sido registrado. Por favor, ingrese otro email.");
 						return;
 					}
 				}
@@ -176,7 +227,7 @@ public class RegisterMedical extends JFrame {
 			}
 		});
 		registroBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		registroBtn.setBounds(60, 274, 117, 23);
+		registroBtn.setBounds(60, 329, 117, 23);
 		contentPane.add(registroBtn);
 
 		JButton inicioBtn = new JButton("INICIO");
@@ -189,7 +240,7 @@ public class RegisterMedical extends JFrame {
 			}
 		});
 		inicioBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		inicioBtn.setBounds(210, 274, 89, 23);
+		inicioBtn.setBounds(210, 329, 89, 23);
 		contentPane.add(inicioBtn);
 
 		JLabel lblNewLabel = new JLabel("");
@@ -233,7 +284,7 @@ public class RegisterMedical extends JFrame {
 
 		JLabel lblPhone = new JLabel("Celular:");
 		lblPhone.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblPhone.setBounds(40, 163, 68, 17);
+		lblPhone.setBounds(40, 183, 68, 17);
 		contentPane.add(lblPhone);
 
 		phoneField = new JTextField();
@@ -257,33 +308,37 @@ public class RegisterMedical extends JFrame {
 			}
 		});
 		phoneField.setColumns(10);
-		phoneField.setBounds(139, 162, 192, 20);
+		phoneField.setBounds(139, 182, 192, 20);
 		contentPane.add(phoneField);
 
 		emailField = new JTextField();
 		emailField.setColumns(10);
-		emailField.setBounds(139, 191, 192, 20);
+		emailField.setBounds(139, 229, 192, 20);
 		contentPane.add(emailField);
 
 		lblEmail = new JLabel("Correo:");
 		lblEmail.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblEmail.setBounds(40, 192, 68, 17);
+		lblEmail.setBounds(40, 230, 68, 17);
 		contentPane.add(lblEmail);
 
 		addressField = new JTextField();
 		addressField.setColumns(10);
-		addressField.setBounds(139, 221, 192, 20);
+		addressField.setBounds(139, 276, 192, 20);
 		contentPane.add(addressField);
 
 		JLabel lblAddress = new JLabel("Direccion:");
 		lblAddress.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblAddress.setBounds(40, 222, 68, 17);
+		lblAddress.setBounds(40, 277, 68, 17);
 		contentPane.add(lblAddress);
 
 		boolean doctorsEmpty = checkIfTableIsEmpty("Doctor");
 
 		asignarHorariosBtn.setEnabled(!doctorsEmpty);
 		asignarRecursosBtn.setEnabled(!doctorsEmpty);
+		
+		
+		
+		
 	}
 
 	private boolean checkIfTableIsEmpty(String tableName) {

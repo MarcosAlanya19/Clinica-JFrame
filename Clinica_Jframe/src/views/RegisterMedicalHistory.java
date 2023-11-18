@@ -1,12 +1,13 @@
 package views;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.Toolkit;
 import javax.swing.JLabel;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
@@ -20,8 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class RegisterMedicalHistory extends JFrame {
 
+public class RegisterMedicalHistory extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField ageField;
@@ -71,7 +72,30 @@ public class RegisterMedicalHistory extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
+		JComboBox<String> bloodTypeSelect = new JComboBox<String>();
+		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		bloodTypeSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "A", "B", "AB", "Desconocido" }));
+		bloodTypeSelect.setToolTipText("");
+		bloodTypeSelect.setBounds(96, 33, 170, 22);
+		panel.add(bloodTypeSelect);
+		
+		JLabel errorAge = new JLabel("");
+		errorAge.setForeground(new Color(255, 0, 0));
+		errorAge.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorAge.setBounds(95, 87, 171, 14);
+		panel.add(errorAge);
+		
+		JLabel errorDescription = new JLabel("");
+		errorDescription.setForeground(new Color(255, 0, 0));
+		errorDescription.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorDescription.setBounds(96, 223, 170, 14);
+		panel.add(errorDescription);
+		
 		JButton registrarBtn = new JButton("REGISTRAR");
+		registrarBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		registrarBtn.setFont(new Font("Arial", Font.PLAIN, 14));
 		registrarBtn.setBounds(10, 270, 131, 23);
 		panel.add(registrarBtn);
@@ -92,41 +116,33 @@ public class RegisterMedicalHistory extends JFrame {
 		JLabel lblBloodtype = new JLabel("<html>Tipo de <br>Sangre:</html>");
 		lblBloodtype.setHorizontalAlignment(SwingConstants.LEFT);
 		lblBloodtype.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblBloodtype.setBounds(10, 55, 77, 34);
+		lblBloodtype.setBounds(10, 21, 77, 34);
 		panel.add(lblBloodtype);
 		
 		JLabel lblAge = new JLabel("Edad:");
 		lblAge.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblAge.setBounds(11, 111, 55, 14);
+		lblAge.setBounds(10, 68, 55, 14);
 		panel.add(lblAge);
 		
 		JLabel lblDescription = new JLabel("Descripcion:");
 		lblDescription.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblDescription.setBounds(10, 146, 87, 14);
+		lblDescription.setBounds(10, 126, 87, 14);
 		panel.add(lblDescription);
 		
 		ageField = new JTextField();
 		ageField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				
 			}
 		});
-		ageField.setBounds(96, 109, 170, 20);
+		ageField.setBounds(95, 66, 170, 20);
 		panel.add(ageField);
 		ageField.setColumns(10);
 		
 		descriptionField = new JTextField();
-		descriptionField.setBounds(96, 144, 170, 95);
+		descriptionField.setBounds(96, 124, 170, 95);
 		panel.add(descriptionField);
 		descriptionField.setColumns(10);
-		
-		JComboBox<String> bloodTypeSelect = new JComboBox<String>();
-		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 14));
-		bloodTypeSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "A", "B", "AB", "Desconocido" }));
-		bloodTypeSelect.setToolTipText("");
-		bloodTypeSelect.setBounds(96, 67, 170, 22);
-		panel.add(bloodTypeSelect);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(239, 248, 252));
