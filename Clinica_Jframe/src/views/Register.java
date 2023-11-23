@@ -40,7 +40,6 @@ public class Register extends JFrame {
 	private JPasswordField passwordField;
 	private JPasswordField passwordVerifyField;
 
-
 	/**
 	 * Launch the application.
 	 */
@@ -87,111 +86,111 @@ public class Register extends JFrame {
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 30));
 		lblNewLabel.setBounds(181, 11, 273, 71);
 		contentPane.add(lblNewLabel);
-		
+
 		JLabel errorName = new JLabel("");
 		errorName.setForeground(Color.RED);
 		errorName.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorName.setBounds(168, 114, 166, 14);
 		contentPane.add(errorName);
-		
+
 		JLabel errorEmail = new JLabel("");
 		errorEmail.setForeground(new Color(255, 0, 0));
-		
+
 		contentPane.add(errorEmail);
-		
+
 		JLabel errorPassword = new JLabel("");
 		errorPassword.setForeground(Color.RED);
 		errorPassword.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorPassword.setBounds(168, 202, 166, 14);
 		contentPane.add(errorPassword);
-		
+
 		JLabel erroEmail = new JLabel("");
 		erroEmail.setForeground(Color.RED);
 		errorEmail.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorEmail.setBounds(168, 159, 166, 14);
 		contentPane.add(erroEmail);
-		
+
 		JLabel errorVerify = new JLabel("");
 		errorVerify.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorVerify.setForeground(Color.RED);
 		errorEmail.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorVerify.setBounds(168, 247, 166, 14);
 		contentPane.add(errorVerify);
-		
-		
+
 		JButton registrarBtn = new JButton("REGISTRAR");
 		registrarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
-				
+				String email = emailField.getText();
+				String password = String.valueOf(passwordField.getPassword());
+				String verifyPassword = String.valueOf(passwordVerifyField.getPassword());
+				String selectedRol = (String) postSelect.getSelectedItem();
+
+				boolean hasError = false;
+
 				if (name.isEmpty()) {
 					errorName.setText("Campo Obligatorio");
+					hasError = true;
 				} else {
 					errorName.setText(null);
 				}
-				
-				String email = emailField.getText();
-				
+
 				if (email.isEmpty()) {
 					erroEmail.setText("Campo Obligatorio");
-					
+					hasError = true;
 				} else {
 					erroEmail.setText(null);
 				}
-				String password = String.valueOf(passwordField.getPassword());
-				
+
 				if (password.isEmpty()) {
 					errorPassword.setText("Campo Obligatorio");
+					hasError = true;
 				} else {
 					errorPassword.setText(null);
 				}
-				
-				String hashedPassword = hashPassword(password);
-				String verifyPassword = String.valueOf(passwordVerifyField.getPassword());
 
 				if (verifyPassword.isEmpty()) {
 					errorVerify.setText("Campo Obligatorio");
+					hasError = true;
 				} else {
 					errorVerify.setText(null);
 				}
-				
-				String selectedRol = (String) postSelect.getSelectedItem();
-				
-				
 
-				if (!password.contentEquals(verifyPassword)) {
+				if (!password.equals(verifyPassword)) {
 					errorPassword.setText("Las contraseñas no coinciden");
-					return;
+					hasError = true;
 				}
-				
-				
+
 				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
 				Pattern pattern = Pattern.compile(emailRegex);
 				Matcher matcher = pattern.matcher(email);
 
 				if (!matcher.matches()) {
 					errorEmail.setText("El correo electrónico no es válido");
-					return;
-				}else {
+					hasError = true;
+				} else {
 					errorEmail.setText(null);
 				}
 
 				if (matcher.matches()) {
 					if (emailExist(email)) {
 						errorEmail.setText("El email ya ha sido registrado. Por favor, ingrese otro email.");
-						return;
-					}else {
+						hasError = true;
+					} else {
 						errorEmail.setText(null);
 					}
 				}
-				
+
+				if (hasError) {
+					return;
+				}
 
 				try {
 					String query = "INSERT INTO admin (name, email, password, rol) VALUES (?,?,?,?)";
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, name);
 					st.setString(2, email);
-					st.setString(3, hashedPassword);
+					st.setString(3, hashPassword(password));
 					st.setString(4, selectedRol);
 					st.executeUpdate();
 
@@ -305,8 +304,6 @@ public class Register extends JFrame {
 		passwordVerifyField = new JPasswordField();
 		passwordVerifyField.setBounds(168, 227, 178, 20);
 		contentPane.add(passwordVerifyField);
-		
-
 
 	}
 

@@ -134,14 +134,13 @@ public class RegisterResource extends JFrame {
 		lblDoctor.setBounds(20, 233, 81, 14);
 		contentPane.add(lblDoctor);
 
-
 		Doctor_idSelect = new JComboBox<Object>();
 		showDoctorSelect();
 
 		Doctor_idSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		Doctor_idSelect.setBounds(123, 229, 170, 22);
 		contentPane.add(Doctor_idSelect);
-		
+
 		JLabel errorName = new JLabel("");
 		errorName.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorName.setForeground(new Color(255, 0, 0));
@@ -152,20 +151,30 @@ public class RegisterResource extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
-				
+
 				if (name.isEmpty()) {
 					errorName.setText("Campo obligatorio");
 					return;
 				} else {
 					errorName.setText(null);
 				}
-				
+
 				String status = (String) statusSelect.getSelectedItem();
 				String availability = (String) availabilitySelect.getSelectedItem();
 
-				Doctor selectedDoctor = (Doctor) Doctor_idSelect.getSelectedItem();
-				int idDoctor = selectedDoctor.getId();
+				if (status == null || availability == null) {
+					JOptionPane.showMessageDialog(null, "Seleccione un estado y disponibilidad");
+					return;
+				}
 
+				Doctor selectedDoctor = (Doctor) Doctor_idSelect.getSelectedItem();
+
+				if (selectedDoctor == null) {
+					JOptionPane.showMessageDialog(null, "Seleccione un doctor");
+					return;
+				}
+
+				int idDoctor = selectedDoctor.getId();
 
 				try {
 					String query = "INSERT INTO Resource (name, status, availability, Doctor_id) VALUES (?, ?, ?, ?)";
@@ -200,7 +209,6 @@ public class RegisterResource extends JFrame {
 		btnRegresar.setFont(new Font("Arial", Font.PLAIN, 14));
 		btnRegresar.setBounds(157, 320, 115, 23);
 		contentPane.add(btnRegresar);
-		
 
 	}
 

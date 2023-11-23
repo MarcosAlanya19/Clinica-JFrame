@@ -74,7 +74,7 @@ public class RegisterMedical extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JButton asignarRecursosBtn = new JButton("<html>ASIGNAR<br>RECURSOS</html>");
 		asignarRecursosBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -87,7 +87,7 @@ public class RegisterMedical extends JFrame {
 		asignarRecursosBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		asignarRecursosBtn.setBounds(341, 346, 107, 54);
 		contentPane.add(asignarRecursosBtn);
-		
+
 		JButton asignarHorariosBtn = new JButton("<html>ASIGNAR<br>HORARIOS</html>");
 		asignarHorariosBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -106,86 +106,83 @@ public class RegisterMedical extends JFrame {
 		errorAddress.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorAddress.setBounds(139, 295, 166, 14);
 		contentPane.add(errorAddress);
-		
-		
+
 		JLabel erName = new JLabel("");
 		erName.setForeground(Color.RED);
 		erName.setFont(new Font("Arial", Font.PLAIN, 9));
 		erName.setBounds(139, 157, 166, 14);
 		contentPane.add(erName);
-		
+
 		JLabel errorPhone = new JLabel("");
 		errorPhone.setForeground(new Color(255, 0, 0));
 		errorPhone.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorPhone.setBounds(139, 204, 166, 14);
 		contentPane.add(errorPhone);
-		
+
 		JLabel errorEmail = new JLabel("");
 		errorEmail.setForeground(new Color(255, 0, 0));
 		errorEmail.setFont(new Font("Arial", Font.PLAIN, 9));
 		errorEmail.setBounds(139, 251, 166, 14);
 		contentPane.add(errorEmail);
-		
+
 		JButton registroBtn = new JButton("REGISTRO");
 		registroBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				String name = nameField.getText();
-				
+				String phone = phoneField.getText();
+				String email = emailField.getText();
+				String address = addressField.getText();
+
+				boolean hasError = false;
+
 				if (name.isEmpty()) {
 					erName.setText("Campo Obligatorio");
-					
+					hasError = true;
 				} else {
 					erName.setText(null);
 				}
-				
-				String phone = phoneField.getText();
-				
+
 				if (phone.isEmpty()) {
 					errorPhone.setText("Campo Obligatorio");
-					
+					hasError = true;
+				} else if (phone.length() != 9) {
+					errorPhone.setText("El celular es incorrecto. Asegúrese de ingresar solo 9 dígitos");
+					hasError = true;
 				} else {
 					errorPhone.setText(null);
 				}
-				
-				String email = emailField.getText();
-				
+
 				if (email.isEmpty()) {
 					errorEmail.setText("Campo Obligatorio");
+					hasError = true;
 				} else {
-					errorEmail.setText(null);
+					String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+					Pattern pattern = Pattern.compile(emailRegex);
+					Matcher matcher = pattern.matcher(email);
+
+					if (!matcher.matches()) {
+						errorEmail.setText("El correo electrónico no es válido");
+						emailField.setText(null);
+						hasError = true;
+					} else {
+						errorEmail.setText(null);
+
+						if (emailExist(email)) {
+							errorEmail.setText("El email ya ha sido registrado. Por favor, ingrese otro email.");
+							hasError = true;
+						}
+					}
 				}
-				
-				String address = addressField.getText();
-				
+
 				if (address.isEmpty()) {
 					errorAddress.setText("Campo Obligatorio");
-					return;
+					hasError = true;
 				} else {
 					errorAddress.setText(null);
 				}
 
-				if (phone.length() != 9) {
-					errorPhone.setText("El celular es incorrecto. asegurese de ingresar solo 9 digitos");
-					
-				}
-
-				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-				
-				
-				Pattern pattern = Pattern.compile(emailRegex);
-				Matcher matcher = pattern.matcher(email);
-				
-				if (!matcher.matches()) {
-					errorEmail.setText("El correo electrónico no es válido");
-					emailField.setText(null);
-				}
-
-				if (matcher.matches()) {
-					if (emailExist(email)) {
-						errorEmail.setText("El email ya ha sido registrado. Por favor, ingrese otro email.");
-						return;
-					}
+				if (hasError) {
+					return;
 				}
 
 				try {
@@ -202,7 +199,7 @@ public class RegisterMedical extends JFrame {
 					phoneField.setText(null);
 					emailField.setText(null);
 					addressField.setText(null);
-					
+
 					asignarHorariosBtn.setEnabled(true);
 					asignarRecursosBtn.setEnabled(true);
 
@@ -335,10 +332,7 @@ public class RegisterMedical extends JFrame {
 
 		asignarHorariosBtn.setEnabled(!doctorsEmpty);
 		asignarRecursosBtn.setEnabled(!doctorsEmpty);
-		
-		
-		
-		
+
 	}
 
 	private boolean checkIfTableIsEmpty(String tableName) {
