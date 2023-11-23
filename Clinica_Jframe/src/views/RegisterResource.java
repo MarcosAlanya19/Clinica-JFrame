@@ -107,53 +107,65 @@ public class RegisterResource extends JFrame {
 
 		JLabel lblEstatus = new JLabel("Estado:");
 		lblEstatus.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblEstatus.setBounds(20, 152, 81, 14);
+		lblEstatus.setBounds(20, 170, 81, 14);
 		contentPane.add(lblEstatus);
 
 		JComboBox<String> statusSelect = new JComboBox<String>();
 		statusSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "En uso", "Mantenimiento" }));
 		statusSelect.setToolTipText("");
 		statusSelect.setFont(new Font("Arial", Font.PLAIN, 14));
-		statusSelect.setBounds(123, 150, 170, 22);
+		statusSelect.setBounds(123, 168, 170, 22);
 		contentPane.add(statusSelect);
 
 		JLabel lblAvailability = new JLabel("Disponibilidad:");
 		lblAvailability.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblAvailability.setBounds(20, 184, 93, 14);
+		lblAvailability.setBounds(20, 202, 93, 14);
 		contentPane.add(lblAvailability);
 
 		JComboBox<String> availabilitySelect = new JComboBox<String>();
 		availabilitySelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Mañana", "Tarde", "Noche" }));
 		availabilitySelect.setToolTipText("");
 		availabilitySelect.setFont(new Font("Arial", Font.PLAIN, 14));
-		availabilitySelect.setBounds(123, 180, 170, 22);
+		availabilitySelect.setBounds(123, 198, 170, 22);
 		contentPane.add(availabilitySelect);
 
 		JLabel lblDoctor = new JLabel("Doctor:");
 		lblDoctor.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblDoctor.setBounds(20, 215, 81, 14);
+		lblDoctor.setBounds(20, 233, 81, 14);
 		contentPane.add(lblDoctor);
+
 
 		Doctor_idSelect = new JComboBox<Object>();
 		showDoctorSelect();
+
 		Doctor_idSelect.setFont(new Font("Arial", Font.PLAIN, 14));
-		Doctor_idSelect.setBounds(123, 211, 170, 22);
+		Doctor_idSelect.setBounds(123, 229, 170, 22);
 		contentPane.add(Doctor_idSelect);
+		
+		JLabel errorName = new JLabel("");
+		errorName.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorName.setForeground(new Color(255, 0, 0));
+		errorName.setBounds(123, 138, 149, 14);
+		contentPane.add(errorName);
 
 		JButton btnNewButton = new JButton("REGISTRO");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
+				
+				if (name.isEmpty()) {
+					errorName.setText("Campo obligatorio");
+					return;
+				} else {
+					errorName.setText(null);
+				}
+				
 				String status = (String) statusSelect.getSelectedItem();
 				String availability = (String) availabilitySelect.getSelectedItem();
 
 				Doctor selectedDoctor = (Doctor) Doctor_idSelect.getSelectedItem();
 				int idDoctor = selectedDoctor.getId();
 
-				if (name.isEmpty() || status.isEmpty() || availability.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
-					return;
-				}
 
 				try {
 					String query = "INSERT INTO Resource (name, status, availability, Doctor_id) VALUES (?, ?, ?, ?)";
@@ -188,6 +200,7 @@ public class RegisterResource extends JFrame {
 		btnRegresar.setFont(new Font("Arial", Font.PLAIN, 14));
 		btnRegresar.setBounds(157, 320, 115, 23);
 		contentPane.add(btnRegresar);
+		
 
 	}
 

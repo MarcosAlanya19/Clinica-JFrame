@@ -25,6 +25,8 @@ import javax.swing.border.EmptyBorder;
 
 import contructor.Patient;
 import model.DBConnection;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegisterHealthInsurance extends JFrame {
 
@@ -40,6 +42,8 @@ public class RegisterHealthInsurance extends JFrame {
 	private Connection connect;
 	private JComboBox<Patient> patientSelect;
 	private JLabel lblNewLabel_5;
+	private JLabel errorPoliceNumber;
+	private JLabel errorPatient;
 
 	/**
 	 * Launch the application.
@@ -93,6 +97,25 @@ public class RegisterHealthInsurance extends JFrame {
 		contentPane.add(lblNewLabel_3);
 		
 		policyField = new JTextField();
+		policyField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean numeros = key >= 48 && key <= 57;
+
+					if (!numeros) {
+						e.consume();
+					}
+
+					if (policyField.getText().trim().length() == 9) {
+						e.consume();
+					}
+				} catch (Exception b) {
+				}
+			}
+		});
 		policyField.setBounds(200, 112, 134, 19);
 		contentPane.add(policyField);
 		policyField.setColumns(10);
@@ -116,7 +139,19 @@ public class RegisterHealthInsurance extends JFrame {
 				int patientId = selectedPatient.getId();
 				
 				String policy = policyField.getText();
+				if (policy.isEmpty()) {
+					errorPoliceNumber.setText("Campo obligatorio");
+					return;
+				} else {
+					errorPoliceNumber.setText(null);
+				}
 				String detail = detailsField.getText();
+				if (detail.isEmpty()) {
+					errorPatient.setText("Campo obligatorio");
+					return;
+				} else {
+					errorPatient.setText(null);
+				}
 				String company = (String) insuranceCompañySelect.getSelectedItem();
 				
 				try {
@@ -168,6 +203,18 @@ public class RegisterHealthInsurance extends JFrame {
 		lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_5.setBounds(37, 251, 76, 13);
 		contentPane.add(lblNewLabel_5);
+		
+		errorPoliceNumber = new JLabel("");
+		errorPoliceNumber.setForeground(new Color(255, 0, 0));
+		errorPoliceNumber.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorPoliceNumber.setBounds(200, 130, 98, 13);
+		contentPane.add(errorPoliceNumber);
+		
+		errorPatient = new JLabel("");
+		errorPatient.setForeground(Color.RED);
+		errorPatient.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorPatient.setBounds(200, 221, 98, 13);
+		contentPane.add(errorPatient);
 	}
 	
 	private void showPatientSelect() {
