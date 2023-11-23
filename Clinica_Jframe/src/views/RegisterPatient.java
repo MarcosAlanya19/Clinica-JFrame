@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,7 +42,8 @@ public class RegisterPatient extends JFrame {
 	private JTextField phoneField;
 	private Connection connect;
 	private JTextField ageField;
-	private int idHistoryMedical = 0;
+	private int idHistoryMedical;
+	private int ageHistoryMedical;
 
 	/**
 	 * Launch the application.
@@ -161,24 +163,25 @@ public class RegisterPatient extends JFrame {
 		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		bloodTypeSelect.setBounds(128, 93, 162, 22);
 		contentPane.add(bloodTypeSelect);
-		
+
 		JLabel bloodTypeLabel = new JLabel("Tipo de sangre:");
 		bloodTypeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 		bloodTypeLabel.setBounds(10, 94, 129, 18);
 		contentPane.add(bloodTypeLabel);
-		
+
 		JLabel lblNewLabel_7 = new JLabel("Edad:");
 		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_7.setBounds(10, 132, 45, 27);
 		contentPane.add(lblNewLabel_7);
-		
+
 		JLabel lblNewLabel_8 = new JLabel("Descripción:");
 		lblNewLabel_8.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_8.setBounds(10, 182, 90, 13);
 		contentPane.add(lblNewLabel_8);
-		
+
 		JDateChooser birthdayDate = new JDateChooser();
 		birthdayDate.setBounds(464, 182, 162, 19);
+		birthdayDate.setDate(new java.util.Date());
 		contentPane.add(birthdayDate);
 
 		JTextPane descriptionField = new JTextPane();
@@ -193,7 +196,7 @@ public class RegisterPatient extends JFrame {
 				String gender = (String) genderSelect.getSelectedItem();
 				String address = addressField.getText();
 				String phone = phoneField.getText();
-				
+
 				Date selectedDate = birthdayDate.getDate();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				String formattedDate = sdf.format(selectedDate);
@@ -203,8 +206,7 @@ public class RegisterPatient extends JFrame {
 					return;
 				}
 
-				if (name.isEmpty() || dni.isEmpty() || gender.isEmpty() || address.isEmpty()
-						|| phone.isEmpty()) {
+				if (name.isEmpty() || dni.isEmpty() || gender.isEmpty() || address.isEmpty() || phone.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
 					return;
 				}
@@ -262,7 +264,7 @@ public class RegisterPatient extends JFrame {
 		phoneField.setEnabled(false);
 		registerBtn.setEnabled(false);
 		birthdayDate.setEnabled(false);
-		
+
 		JButton btnNewButton = new JButton("REGISTRO HISTORIAL MÉDICO");
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
 		btnNewButton.addActionListener(new ActionListener() {
@@ -305,11 +307,22 @@ public class RegisterPatient extends JFrame {
 								phoneField.setEnabled(true);
 								registerBtn.setEnabled(true);
 								birthdayDate.setEnabled(true);
-								
+
 								bloodTypeSelect.setEnabled(false);
 								ageField.setEnabled(false);
 								descriptionField.setEnabled(false);
 								btnNewButton.setEnabled(false);
+
+								String query2 = "SELECT age FROM medicalHistory WHERE id = ?";
+								try (PreparedStatement ageStatement = connect.prepareStatement(query2)) {
+									ageStatement.setInt(1, idHistoryMedical);
+									ResultSet ageResult = ageStatement.executeQuery();
+									if (ageResult.next()) {
+										ageHistoryMedical = ageResult.getInt("age");
+									}
+								} catch (SQLException err) {
+									err.printStackTrace();
+								}
 							}
 						}
 					}
