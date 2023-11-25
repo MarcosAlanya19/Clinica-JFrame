@@ -379,11 +379,18 @@ public class RegisterPatient extends JFrame {
 		registerBtn.setEnabled(false);
 		birthdayDate.setEnabled(false);
 		
-		JLabel errorDescription = new JLabel("");
-		errorDescription.setForeground(new Color(255, 0, 0));
-		errorDescription.setFont(new Font("Arial", Font.PLAIN, 9));
-		errorDescription.setBounds(128, 270, 90, 13);
-		contentPane.add(errorDescription);
+		JLabel descriptionError = new JLabel("");
+		descriptionError.setForeground(new Color(255, 0, 0));
+		descriptionError.setFont(new Font("Arial", Font.PLAIN, 10));
+		descriptionError.setBounds(128, 270, 140, 13);
+		contentPane.add(descriptionError);
+		
+		JLabel ageError = new JLabel("");
+		ageError.setForeground(new Color(255, 0, 0));
+		ageError.setBackground(new Color(255, 0, 0));
+		ageError.setFont(new Font("Arial", Font.PLAIN, 10));
+		ageError.setBounds(128, 155, 125, 13);
+		contentPane.add(ageError);
 		
 		JButton btnNewButton = new JButton("REGISTRO HISTORIAL MÉDICO");
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
@@ -392,13 +399,18 @@ public class RegisterPatient extends JFrame {
 
 				String bloodType = (String) bloodTypeSelect.getSelectedItem();
 				String age = ageField.getText();
+				if (age.isEmpty()) {
+					ageError.setText("Campo obligatorio");
+				} else {
+					ageError.setText(null);
+				}
 				String description = descriptionField.getText();
 
 				if (description.isEmpty()) {
-					errorDescription.setText("Campo obligatorio");
+					descriptionError.setText("Campo obligatorio");
 					return;
 				} else {
-					errorDescription.setText(null);
+					descriptionError.setText(null);
 				}
 
 				if (age.length() != 2) {

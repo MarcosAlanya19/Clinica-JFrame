@@ -9,4 +9,6 @@ module Clinica_Jframe {
 	requires java.desktop;
 	requires jBCrypt;
 	requires jcalendar;
+	requires swing.time.picker;
+	requires TimingFramework;
 }
