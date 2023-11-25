@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -67,7 +66,7 @@ public class Register extends JFrame {
 		setTitle("CLINICA DEL PILAR");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Register.class.getResource("/img/logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 650, 450);
+		setBounds(100, 100, 650, 460);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(239, 248, 252));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -79,7 +78,7 @@ public class Register extends JFrame {
 		postSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		postSelect.setModel(new DefaultComboBoxModel<String>(new String[] { "Administrador", "Medico" }));
 		postSelect.setToolTipText("");
-		postSelect.setBounds(168, 263, 181, 22);
+		postSelect.setBounds(168, 278, 181, 22);
 		contentPane.add(postSelect);
 
 		JLabel lblNewLabel = new JLabel("REGISTRO");
@@ -88,26 +87,78 @@ public class Register extends JFrame {
 		lblNewLabel.setBounds(181, 11, 273, 71);
 		contentPane.add(lblNewLabel);
 
+		JLabel errorName = new JLabel("");
+		errorName.setForeground(Color.RED);
+		errorName.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorName.setBounds(168, 114, 166, 14);
+		contentPane.add(errorName);
+
+		JLabel errorEmail = new JLabel("");
+		errorEmail.setForeground(new Color(255, 0, 0));
+
+		contentPane.add(errorEmail);
+
+		JLabel errorPassword = new JLabel("");
+		errorPassword.setForeground(Color.RED);
+		errorPassword.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorPassword.setBounds(168, 202, 166, 14);
+		contentPane.add(errorPassword);
+
+		JLabel erroEmail = new JLabel("");
+		erroEmail.setForeground(Color.RED);
+		errorEmail.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorEmail.setBounds(168, 159, 166, 14);
+		contentPane.add(erroEmail);
+
+		JLabel errorVerify = new JLabel("");
+		errorVerify.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorVerify.setForeground(Color.RED);
+		errorEmail.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorVerify.setBounds(168, 247, 166, 14);
+		contentPane.add(errorVerify);
+
 		JButton registrarBtn = new JButton("REGISTRAR");
 		registrarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
 				String email = emailField.getText();
-
 				String password = String.valueOf(passwordField.getPassword());
-				String hashedPassword = hashPassword(password);
 				String verifyPassword = String.valueOf(passwordVerifyField.getPassword());
-
 				String selectedRol = (String) postSelect.getSelectedItem();
 
-				if (name.isEmpty() || email.isEmpty() || password.isEmpty() || selectedRol.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
-					return;
+				boolean hasError = false;
+
+				if (name.isEmpty()) {
+					errorName.setText("Campo Obligatorio");
+					hasError = true;
+				} else {
+					errorName.setText(null);
 				}
 
-				if (!password.contentEquals(verifyPassword)) {
-					JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
-					return;
+				if (email.isEmpty()) {
+					erroEmail.setText("Campo Obligatorio");
+					hasError = true;
+				} else {
+					erroEmail.setText(null);
+				}
+
+				if (password.isEmpty()) {
+					errorPassword.setText("Campo Obligatorio");
+					hasError = true;
+				} else {
+					errorPassword.setText(null);
+				}
+
+				if (verifyPassword.isEmpty()) {
+					errorVerify.setText("Campo Obligatorio");
+					hasError = true;
+				} else {
+					errorVerify.setText(null);
+				}
+
+				if (!password.equals(verifyPassword)) {
+					errorPassword.setText("Las contraseñas no coinciden");
+					hasError = true;
 				}
 
 				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -115,16 +166,23 @@ public class Register extends JFrame {
 				Matcher matcher = pattern.matcher(email);
 
 				if (!matcher.matches()) {
-					JOptionPane.showMessageDialog(null, "El correo electrónico no es válido");
-					emailField.setText(null);
-					return;
+					errorEmail.setText("El correo electrónico no es válido");
+					hasError = true;
+				} else {
+					errorEmail.setText(null);
 				}
 
 				if (matcher.matches()) {
 					if (emailExist(email)) {
-						JOptionPane.showMessageDialog(null, "El email ya ha sido registrado. Por favor, ingrese otro email.");
-						return;
+						errorEmail.setText("El email ya ha sido registrado. Por favor, ingrese otro email.");
+						hasError = true;
+					} else {
+						errorEmail.setText(null);
 					}
+				}
+
+				if (hasError) {
+					return;
 				}
 
 				try {
@@ -132,7 +190,7 @@ public class Register extends JFrame {
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, name);
 					st.setString(2, email);
-					st.setString(3, hashedPassword);
+					st.setString(3, hashPassword(password));
 					st.setString(4, selectedRol);
 					st.executeUpdate();
 
@@ -146,7 +204,6 @@ public class Register extends JFrame {
 
 				} catch (Exception err) {
 					err.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error en el servidor");
 				}
 
 			}
@@ -184,7 +241,7 @@ public class Register extends JFrame {
 		JLabel lblName = new JLabel("Nombres:");
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 		lblName.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblName.setBounds(68, 121, 84, 23);
+		lblName.setBounds(68, 93, 84, 23);
 		contentPane.add(lblName);
 
 		nameField = new JTextField();
@@ -206,36 +263,36 @@ public class Register extends JFrame {
 			}
 		});
 		nameField.setFont(new Font("Arial", Font.PLAIN, 14));
-		nameField.setBounds(170, 122, 176, 20);
+		nameField.setBounds(170, 94, 176, 20);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 
 		emailField = new JTextField();
 		emailField.setFont(new Font("Arial", Font.PLAIN, 14));
 		emailField.setColumns(10);
-		emailField.setBounds(170, 156, 176, 20);
+		emailField.setBounds(170, 139, 176, 20);
 		contentPane.add(emailField);
 
 		JLabel lblEmail = new JLabel("Correo:");
 		lblEmail.setHorizontalAlignment(SwingConstants.LEFT);
 		lblEmail.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblEmail.setBounds(68, 155, 84, 23);
+		lblEmail.setBounds(68, 138, 84, 23);
 		contentPane.add(lblEmail);
 
 		JLabel lblPasword = new JLabel("Contraseña:");
 		lblPasword.setHorizontalAlignment(SwingConstants.LEFT);
 		lblPasword.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblPasword.setBounds(68, 191, 84, 23);
+		lblPasword.setBounds(68, 179, 84, 23);
 		contentPane.add(lblPasword);
 
 		JLabel lblPost = new JLabel("Cargo:");
 		lblPost.setHorizontalAlignment(SwingConstants.LEFT);
 		lblPost.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblPost.setBounds(68, 263, 84, 23);
+		lblPost.setBounds(68, 278, 84, 23);
 		contentPane.add(lblPost);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(168, 193, 178, 20);
+		passwordField.setBounds(168, 181, 178, 20);
 		contentPane.add(passwordField);
 
 		JLabel lblPasword_1 = new JLabel("Validacion:");

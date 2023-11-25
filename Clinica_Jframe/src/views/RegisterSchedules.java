@@ -143,7 +143,11 @@ public class RegisterSchedules extends JFrame {
 				String endTime = endField.getText();
 
 				Doctor selectedDoctor = (Doctor) doctorSelect.getSelectedItem();
-				int idDoctor = selectedDoctor.getId();
+
+				if (day == null || startTime.isEmpty() || endTime.isEmpty() || selectedDoctor == null) {
+					JOptionPane.showMessageDialog(null, "Complete todos los campos y seleccione un doctor");
+					return;
+				}
 
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -162,7 +166,7 @@ public class RegisterSchedules extends JFrame {
 					st.setString(1, startTime);
 					st.setString(2, endTime);
 					st.setString(3, day);
-					st.setLong(4, idDoctor);
+					st.setLong(4, selectedDoctor.getId());
 					st.executeUpdate();
 
 					dispose();

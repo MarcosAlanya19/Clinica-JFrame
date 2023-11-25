@@ -74,19 +74,19 @@ public class Login extends JFrame {
 		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_1.setBounds(63, 104, 113, 14);
 		contentPane.add(lblNewLabel_1);
-		
+
 		JLabel errEmail = new JLabel("");
 		errEmail.setFont(new Font("Arial", Font.PLAIN, 10));
 		errEmail.setForeground(new Color(255, 0, 0));
 		errEmail.setBounds(184, 119, 135, 14);
 		contentPane.add(errEmail);
-		
+
 		JLabel errPassword = new JLabel("");
 		errPassword.setFont(new Font("Arial", Font.PLAIN, 10));
 		errPassword.setForeground(Color.RED);
 		errPassword.setBounds(184, 162, 135, 14);
 		contentPane.add(errPassword);
-		
+
 		JLabel errAll = new JLabel("");
 		errAll.setFont(new Font("Arial", Font.PLAIN, 11));
 		errAll.setHorizontalAlignment(SwingConstants.CENTER);
@@ -100,26 +100,28 @@ public class Login extends JFrame {
 				String username = usernameField.getText();
 				char[] passwordChars = passwordField.getPassword();
 				String password = new String(passwordChars);
-				
+
+				boolean hasError = false;
+
 				if (username.isEmpty()) {
 					errEmail.setText("Campo Obligatorio");
-					return;
-				} else {
-					errEmail.setText(null);
-				}
-				
-				if (!isValidEmail(username)) {
+					hasError = true;
+				} else if (!isValidEmail(username)) {
 					errEmail.setText("Correo no valido");
-					return;
+					hasError = true;
 				} else {
 					errEmail.setText(null);
 				}
-				
+
 				if (password.isEmpty()) {
 					errPassword.setText("Campo Obligatorio");
-					return;
+					hasError = true;
 				} else {
 					errPassword.setText(null);
+				}
+
+				if (hasError) {
+					return;
 				}
 
 				try {
@@ -130,7 +132,6 @@ public class Login extends JFrame {
 
 					if (rs.next()) {
 						String hashedPasswordFromDatabase = rs.getString("password");
-						System.out.println("Contraseña en la base de datos: " + hashedPasswordFromDatabase);
 
 						if (BCrypt.checkpw(password, hashedPasswordFromDatabase)) {
 							dispose();
@@ -138,10 +139,10 @@ public class Login extends JFrame {
 							createWindow.setLocationRelativeTo(null);
 							createWindow.setVisible(true);
 						} else {
-							errAll.setText("Contraseña incorrecta");
+							errPassword.setText("Contraseña incorrecta");
 						}
 					} else {
-						errAll.setText("Usuario no encontrado");
+						errEmail.setText("Usuario no encontrado");
 					}
 
 					st.close();
@@ -202,6 +203,6 @@ public class Login extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(184, 143, 135, 20);
 		contentPane.add(passwordField);
-	
+
 	}
 }

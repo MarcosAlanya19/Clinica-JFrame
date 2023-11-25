@@ -148,22 +148,30 @@ public class RegisterInvoice extends JFrame {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String formattedDate = dateFormat.format(currentDate);
 				String total = totalField.getText();
+
+				boolean hasError = false;
+
 				if (total.isEmpty()) {
 					errorTotal.setText("Campo obligatorio");
-					return;
+					hasError = true;
 				} else {
 					errorTotal.setText(null);
 				}
+
 				String detail = detailField.getText();
 				if (detail.isEmpty()) {
 					errorDetail.setText("Campo obligatorio");
-					return;
+					hasError = true;
 				} else {
 					errorDetail.setText(null);
 				}
 
 				Patient selectedPatient = (Patient) patientSelect.getSelectedItem();
 				int patientId = selectedPatient.getId();
+
+				if (hasError) {
+					return;
+				}
 
 				try {
 					String query = "INSERT INTO Invoice (issueDate, total, businessName, ruc, detail, Patient_id) VALUES (?, ?, ?, ?, ?,?)";
