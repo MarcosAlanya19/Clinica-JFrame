@@ -8,7 +8,7 @@ CREATE TABLE MedicalHistory (
 );
 
 -- Tabla de usuario
-CREATE TABLE User (
+CREATE TABLE Admin (
   id INT AUTO_INCREMENT NOT NULL,
   name VARCHAR(45) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
@@ -26,8 +26,8 @@ CREATE TABLE Patient (
   phone VARCHAR(20) NOT NULL,
   gender ENUM('Masculino', 'Femenino') NOT NULL,
   dni VARCHAR(20) NOT NULL UNIQUE,
-  MedicalHistory_id INT NOT NULL,
-  User_id INT NOT NULL,
+  MedicalHistory_id INT,
+  User_id INT,
   PRIMARY KEY (id),
   KEY fk_Patient_MedicalHistory1 (MedicalHistory_id),
   KEY fk_Patient_User1 (User_id)
@@ -49,8 +49,8 @@ CREATE TABLE Appointment (
   date DATETIME NULL,
   description TEXT NULL,
   status ENUM('Programado', 'Cancelado', 'Terminado') NULL,
-  Doctor_id INT NOT NULL,
-  Patient_id INT NOT NULL,
+  Doctor_id INT,
+  Patient_id INT,
   PRIMARY KEY (id),
   KEY fk_Appointment_Doctor1 (Doctor_id),
   KEY fk_Appointment_Patient1 (Patient_id)
@@ -62,7 +62,7 @@ CREATE TABLE HealthInsurance (
   policyNumber VARCHAR(45) NOT NULL,
   insuranceCompany VARCHAR(100) NOT NULL,
   coverageDetails VARCHAR(100) NOT NULL,
-  Patient_id INT NOT NULL,
+  Patient_id INT,
   PRIMARY KEY (id),
   KEY fk_HealthInsurance_Patient1 (Patient_id)
 );
@@ -72,10 +72,10 @@ CREATE TABLE Invoice (
   id INT AUTO_INCREMENT NOT NULL,
   issueDate DATE NULL,
   total DECIMAL(10, 2) NOT NULL,
-  legalName VARCHAR(100) NOT NULL,
-  taxID VARCHAR(20) NOT NULL,
-  details TEXT NOT NULL,
-  Patient_id INT NOT NULL,
+  businessName VARCHAR(100) NOT NULL,
+  ruc VARCHAR(20) NOT NULL,
+  detail TEXT NOT NULL,
+  Patient_id INT,
   PRIMARY KEY (id),
   KEY fk_Invoice_Patient1 (Patient_id)
 );
@@ -86,7 +86,7 @@ CREATE TABLE Resource (
   name VARCHAR(45) NOT NULL,
   status ENUM('Disponible', 'En uso', 'Mantenimiento') NOT NULL,
   availability ENUM('Mañana', 'Tarde', 'Noche') NOT NULL,
-  Doctor_id INT NOT NULL,
+  Doctor_id INT,
   PRIMARY KEY (id),
   KEY fk_Resource_Doctor1 (Doctor_id)
 );
@@ -97,7 +97,7 @@ CREATE TABLE AppointmentSchedule (
   startTime TIME NOT NULL,
   endTime TIME NOT NULL,
   day ENUM('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo') NOT NULL,
-  Doctor_id INT NOT NULL,
+  Doctor_id INT,
   PRIMARY KEY (id),
   KEY fk_AppointmentSchedule_Doctor1 (Doctor_id)
 );

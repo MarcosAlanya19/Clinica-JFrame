@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -111,11 +113,47 @@ public class RegisterPatient extends JFrame {
 		contentPane.add(lblNewLabel_6);
 
 		nameField = new JTextField();
+		nameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean mayusculas = key >= 65 && key <= 90;
+					boolean minusculas = key >= 97 && key <= 122;
+					boolean espacio = key == 32;
+
+					if (!(minusculas || mayusculas || espacio)) {
+						e.consume();
+					}
+				} catch (Exception c) {
+				}
+			}
+		});
 		nameField.setBounds(464, 91, 162, 19);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 
 		dniField = new JTextField();
+		dniField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean numeros = key >= 48 && key <= 57;
+
+					if (!numeros) {
+						e.consume();
+					}
+
+					if (dniField.getText().trim().length() == 8) {
+						e.consume();
+					}
+				} catch (Exception b) {
+				}
+			}
+		});
 		dniField.setBounds(464, 137, 162, 19);
 		contentPane.add(dniField);
 		dniField.setColumns(10);
@@ -133,6 +171,25 @@ public class RegisterPatient extends JFrame {
 		addressField.setColumns(10);
 
 		phoneField = new JTextField();
+		phoneField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean numeros = key >= 48 && key <= 57;
+
+					if (!numeros) {
+						e.consume();
+					}
+
+					if (phoneField.getText().trim().length() == 9) {
+						e.consume();
+					}
+				} catch (Exception b) {
+				}
+			}
+		});
 		phoneField.setBounds(464, 307, 162, 19);
 		contentPane.add(phoneField);
 		phoneField.setColumns(10);
@@ -151,6 +208,25 @@ public class RegisterPatient extends JFrame {
 		contentPane.add(startBtn);
 
 		ageField = new JTextField();
+		ageField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				try {
+					int key = e.getKeyChar();
+
+					boolean numeros = key >= 48 && key <= 57;
+
+					if (!numeros) {
+						e.consume();
+					}
+
+					if (ageField.getText().trim().length() == 3) {
+						e.consume();
+					}
+				} catch (Exception b) {
+				}
+			}
+		});
 		ageField.setBounds(128, 137, 162, 19);
 		contentPane.add(ageField);
 		ageField.setColumns(10);
@@ -161,22 +237,22 @@ public class RegisterPatient extends JFrame {
 		bloodTypeSelect.setFont(new Font("Arial", Font.PLAIN, 14));
 		bloodTypeSelect.setBounds(128, 93, 162, 22);
 		contentPane.add(bloodTypeSelect);
-		
+
 		JLabel bloodTypeLabel = new JLabel("Tipo de sangre:");
 		bloodTypeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 		bloodTypeLabel.setBounds(10, 94, 129, 18);
 		contentPane.add(bloodTypeLabel);
-		
+
 		JLabel lblNewLabel_7 = new JLabel("Edad:");
 		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_7.setBounds(10, 132, 45, 27);
 		contentPane.add(lblNewLabel_7);
-		
+
 		JLabel lblNewLabel_8 = new JLabel("Descripción:");
 		lblNewLabel_8.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_8.setBounds(10, 182, 90, 13);
 		contentPane.add(lblNewLabel_8);
-		
+
 		JDateChooser birthdayDate = new JDateChooser();
 		birthdayDate.setBounds(464, 182, 162, 19);
 		contentPane.add(birthdayDate);
@@ -184,6 +260,30 @@ public class RegisterPatient extends JFrame {
 		JTextPane descriptionField = new JTextPane();
 		descriptionField.setBounds(128, 182, 162, 89);
 		contentPane.add(descriptionField);
+
+		JLabel errorName = new JLabel("");
+		errorName.setForeground(Color.RED);
+		errorName.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorName.setBounds(464, 109, 90, 13);
+		contentPane.add(errorName);
+
+		JLabel errorDni = new JLabel("");
+		errorDni.setForeground(Color.RED);
+		errorDni.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorDni.setBounds(464, 155, 90, 13);
+		contentPane.add(errorDni);
+
+		JLabel errorAddress = new JLabel("");
+		errorAddress.setForeground(Color.RED);
+		errorAddress.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorAddress.setBounds(464, 285, 90, 13);
+		contentPane.add(errorAddress);
+
+		JLabel errorPhone = new JLabel("");
+		errorPhone.setForeground(Color.RED);
+		errorPhone.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorPhone.setBounds(464, 327, 90, 13);
+		contentPane.add(errorPhone);
 
 		JButton registerBtn = new JButton("REGISTRO");
 		registerBtn.addActionListener(new ActionListener() {
@@ -193,37 +293,61 @@ public class RegisterPatient extends JFrame {
 				String gender = (String) genderSelect.getSelectedItem();
 				String address = addressField.getText();
 				String phone = phoneField.getText();
-				
+
+				boolean hasError = false;
+
+				if (name.isEmpty()) {
+					errorName.setText("Campo obligatorio");
+					hasError = true;
+				} else {
+					errorName.setText(null);
+				}
+
+				if (dni.isEmpty()) {
+					errorDni.setText("Campo obligatorio");
+					hasError = true;
+				} else if (dni.length() != 8) {
+					errorDni.setText("El DNI es incorrecto. Asegúrese de ingresar datos reales");
+					dniField.setText(null);
+					hasError = true;
+				} else {
+					errorDni.setText(null);
+				}
+
+				if (address.isEmpty()) {
+					errorAddress.setText("Campo obligatorio");
+					hasError = true;
+				} else {
+					errorAddress.setText(null);
+				}
+
+				if (phone.isEmpty()) {
+					errorPhone.setText("Campo obligatorio");
+					hasError = true;
+				} else if (phone.length() != 9) {
+					errorPhone.setText("El celular es incorrecto. Asegúrese de ingresar datos reales");
+					phoneField.setText(null);
+					hasError = true;
+				} else {
+					errorPhone.setText(null);
+				}
+
 				Date selectedDate = birthdayDate.getDate();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				String formattedDate = sdf.format(selectedDate);
 
 				if (idHistoryMedical == 0) {
 					JOptionPane.showMessageDialog(null, "Error: El ID del historial médico no está establecido");
-					return;
-				}
-
-				if (name.isEmpty() || dni.isEmpty() || gender.isEmpty() || address.isEmpty()
-						|| phone.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
-					return;
-				}
-
-				if (dni.length() != 8) {
-					JOptionPane.showMessageDialog(null, "El DNI es incorrecto. asegurese de ingresar datos reales");
-					dniField.setText(null);
-					return;
-				}
-
-				if (phone.length() != 9) {
-					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
-					phoneField.setText(null);
-					return;
+					hasError = true;
 				}
 
 				if (dniExist(dni)) {
 					JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
 					dniField.setText(null);
+					hasError = true;
+				}
+
+				if (hasError) {
 					return;
 				}
 
@@ -262,7 +386,13 @@ public class RegisterPatient extends JFrame {
 		phoneField.setEnabled(false);
 		registerBtn.setEnabled(false);
 		birthdayDate.setEnabled(false);
-		
+
+		JLabel errorDescription = new JLabel("");
+		errorDescription.setForeground(new Color(255, 0, 0));
+		errorDescription.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorDescription.setBounds(128, 270, 90, 13);
+		contentPane.add(errorDescription);
+
 		JButton btnNewButton = new JButton("REGISTRO HISTORIAL MÉDICO");
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
 		btnNewButton.addActionListener(new ActionListener() {
@@ -271,14 +401,34 @@ public class RegisterPatient extends JFrame {
 				String age = ageField.getText();
 				String description = descriptionField.getText();
 
-				if (bloodType.isEmpty() || age.isEmpty() || description.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
-					return;
+				boolean hasError = false;
+
+				if (description.isEmpty()) {
+					errorDescription.setText("Campo obligatorio");
+					hasError = true;
+				} else {
+					errorDescription.setText(null);
 				}
 
-				if (age.length() != 2) {
-					JOptionPane.showMessageDialog(null, "La edad solo puede tener 2 digitos");
+				if (age.isEmpty()) {
+					// errorAge.setText("Campo obligatorio");
+					hasError = true;
+				} else if (age.length() > 2) {
 					ageField.setText(null);
+					// errorAge.setText("La edad debe tener como máximo 2 dígitos");
+					hasError = true;
+				} else {
+					try {
+						Integer.parseInt(age);
+						// errorAge.setText(null);
+					} catch (NumberFormatException ex) {
+						ageField.setText(null);
+						// errorAge.setText("La edad debe ser un número válido");
+						hasError = true;
+					}
+				}
+
+				if (hasError) {
 					return;
 				}
 
@@ -305,7 +455,7 @@ public class RegisterPatient extends JFrame {
 								phoneField.setEnabled(true);
 								registerBtn.setEnabled(true);
 								birthdayDate.setEnabled(true);
-								
+
 								bloodTypeSelect.setEnabled(false);
 								ageField.setEnabled(false);
 								descriptionField.setEnabled(false);
