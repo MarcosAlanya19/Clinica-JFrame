@@ -416,7 +416,7 @@ public class RegisterPatient extends JFrame {
 				boolean hasError = false;
 
 				if (description.isEmpty()) {
-					errorDescription.setText("Campo obligatorio");
+					descriptionError.setText("Campo obligatorio");
 					hasError = true;
 				} else {
 					descriptionError.setText(null);

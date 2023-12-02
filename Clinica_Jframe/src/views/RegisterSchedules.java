@@ -37,8 +37,6 @@ public class RegisterSchedules extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField startField;
-	private JTextField endField;
 	private Connection connect;
 	JComboBox<Object> doctorSelect;
 	MaskFormatter timeFormatter;
@@ -94,20 +92,10 @@ public class RegisterSchedules extends JFrame {
 		lblNewLabel_1_2.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_1_2.setBounds(37, 203, 66, 13);
 		contentPane.add(lblNewLabel_1_2);
-
+    
 		try {
 			timeFormatter = new MaskFormatter("##:##:##");
 			timeFormatter.setPlaceholderCharacter('0');
-
-			startField = new JFormattedTextField(timeFormatter);
-			startField.setBounds(132, 159, 153, 19);
-			startField.setColumns(10);
-			getContentPane().add(startField);
-
-			endField = new JFormattedTextField(timeFormatter);
-			endField.setBounds(132, 201, 153, 19);
-			endField.setColumns(10);
-			getContentPane().add(endField);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -139,41 +127,35 @@ public class RegisterSchedules extends JFrame {
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String day = (String) daySelect.getSelectedItem();
-				String startTime = startField.getText();
-				String endTime = endField.getText();
+				String endTime = "hola";
 
 				Doctor selectedDoctor = (Doctor) doctorSelect.getSelectedItem();
 
-				if (day == null || startTime.isEmpty() || endTime.isEmpty() || selectedDoctor == null) {
-					JOptionPane.showMessageDialog(null, "Complete todos los campos y seleccione un doctor");
-					return;
-				}
-
+				
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 				try {
-					Date parsedStartTime = timeFormat.parse(startTime);
 					Date parsedEndTime = timeFormat.parse(endTime);
 
-					if (parsedStartTime.after(parsedEndTime)) {
+	//				if (parsedStartTime.after(parsedEndTime)) {
 						JOptionPane.showMessageDialog(null,
 								"El tiempo de inicio no puede ser mayor que el tiempo de finalización.");
 						return;
-					}
+					
 
-					String query = "INSERT INTO AppointmentSchedule (startTime, endTime, day, Doctor_id) VALUES (?, ?, ?, ?)";
-					PreparedStatement st = connect.prepareStatement(query);
-					st.setString(1, startTime);
-					st.setString(2, endTime);
-					st.setString(3, day);
-					st.setLong(4, selectedDoctor.getId());
-					st.executeUpdate();
+	//				String query = "INSERT INTO AppointmentSchedule (startTime, endTime, day, Doctor_id) VALUES (?, ?, ?, ?)";
+	//				PreparedStatement st = connect.prepareStatement(query);
+	//				st.setString(1, startTime);
+		//			st.setString(2, endTime);
+			//		st.setString(3, day);
+				//	st.setLong(4, idDoctor);
+					//st.executeUpdate();
 
-					dispose();
-					RegisterSchedules createWindow = new RegisterSchedules();
-					createWindow.setLocationRelativeTo(null);
-					createWindow.setVisible(true);
-					JOptionPane.showMessageDialog(null, "Horario registrado correctamente");
+			//		dispose();
+				//	RegisterSchedules createWindow = new RegisterSchedules();
+					//createWindow.setLocationRelativeTo(null);
+			//		createWindow.setVisible(true);
+				//	JOptionPane.showMessageDialog(null, "Horario registrado correctamente");
 				} catch (Exception err) {
 					err.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error en el servidor");
@@ -196,6 +178,30 @@ public class RegisterSchedules extends JFrame {
 		backBtn.setFont(new Font("Arial", Font.BOLD, 14));
 		backBtn.setBounds(223, 330, 123, 21);
 		contentPane.add(backBtn);
+		
+		JComboBox<Object> hourSelect = new JComboBox<Object>();
+		hourSelect.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
+		hourSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		hourSelect.setBounds(132, 161, 66, 21);
+		contentPane.add(hourSelect);
+		
+		JComboBox<Object> minutSelect = new JComboBox<Object>();
+		minutSelect.setModel(new DefaultComboBoxModel(new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"}));
+		minutSelect.setFont(new Font("Arial", Font.PLAIN, 14));
+		minutSelect.setBounds(223, 161, 62, 21);
+		contentPane.add(minutSelect);
+		
+		JComboBox<Object> hourSelect_2 = new JComboBox<Object>();
+		hourSelect_2.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
+		hourSelect_2.setFont(new Font("Arial", Font.PLAIN, 14));
+		hourSelect_2.setBounds(132, 200, 66, 21);
+		contentPane.add(hourSelect_2);
+		
+		JComboBox<Object> minutSelect_2 = new JComboBox<Object>();
+		minutSelect_2.setModel(new DefaultComboBoxModel(new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"}));
+		minutSelect_2.setFont(new Font("Arial", Font.PLAIN, 14));
+		minutSelect_2.setBounds(223, 199, 62, 21);
+		contentPane.add(minutSelect_2);
 	}
 
 	private void showDoctorSelect() {
