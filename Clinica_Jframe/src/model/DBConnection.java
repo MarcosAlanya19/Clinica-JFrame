@@ -6,8 +6,6 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import appConfig.AppConfig;
-
 public class DBConnection {
 	private static final String SERVER_URL = AppConfig.SERVER_URL;
 	private static final String USER = AppConfig.USER;
