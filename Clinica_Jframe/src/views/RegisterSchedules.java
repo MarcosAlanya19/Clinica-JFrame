@@ -93,7 +93,7 @@ public class RegisterSchedules extends JFrame {
 		lblNewLabel_1_2.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNewLabel_1_2.setBounds(37, 203, 66, 13);
 		contentPane.add(lblNewLabel_1_2);
-
+    
 		try {
 			timeFormatter = new MaskFormatter("##:##:##");
 			timeFormatter.setPlaceholderCharacter('0');
