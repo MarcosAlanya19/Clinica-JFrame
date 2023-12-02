@@ -37,7 +37,6 @@ public class RegisterSchedules extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField endField;
 	private Connection connect;
 	JComboBox<Object> doctorSelect;
 	MaskFormatter timeFormatter;
@@ -97,11 +96,6 @@ public class RegisterSchedules extends JFrame {
 		try {
 			timeFormatter = new MaskFormatter("##:##:##");
 			timeFormatter.setPlaceholderCharacter('0');
-
-			endField = new JFormattedTextField(timeFormatter);
-			endField.setBounds(132, 285, 153, 19);
-			endField.setColumns(10);
-			getContentPane().add(endField);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -133,7 +127,7 @@ public class RegisterSchedules extends JFrame {
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String day = (String) daySelect.getSelectedItem();
-				String endTime = endField.getText();
+				String endTime = "hola";
 
 				Doctor selectedDoctor = (Doctor) doctorSelect.getSelectedItem();
 				int idDoctor = selectedDoctor.getId();
