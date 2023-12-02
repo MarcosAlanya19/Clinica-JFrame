@@ -130,8 +130,8 @@ public class RegisterSchedules extends JFrame {
 				String endTime = "hola";
 
 				Doctor selectedDoctor = (Doctor) doctorSelect.getSelectedItem();
-				int idDoctor = selectedDoctor.getId();
 
+				
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 				try {

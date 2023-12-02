@@ -130,9 +130,11 @@ public class RegisterAppoinment extends JFrame {
 
 				String description = descriptionField.getText();
 
+				boolean hasError = false;
+
 				if (description.isEmpty()) {
 					errDescription.setText("Campo obligatorio");
-					return;
+					hasError = true;
 				} else {
 					errDescription.setText(null);
 				}
@@ -142,6 +144,10 @@ public class RegisterAppoinment extends JFrame {
 
 				Doctor selectedDoctor = (Doctor) doctorSelect.getSelectedItem();
 				int doctorId = selectedDoctor.getId();
+
+				if (hasError) {
+					return;
+				}
 
 				try {
 					String query = "INSERT INTO Appointment (date, description, status, Doctor_id, Patient_id) VALUES (?, ?, ?, ?, ?)";
@@ -154,7 +160,6 @@ public class RegisterAppoinment extends JFrame {
 					st.executeUpdate();
 
 					JOptionPane.showMessageDialog(null, "Cita creada correctamente");
-					dateField.setDate(null);
 					descriptionField.setText(null);
 				} catch (Exception err) {
 					err.printStackTrace();

@@ -289,29 +289,45 @@ public class RegisterPatient extends JFrame {
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
+				String dni = dniField.getText();
+				String gender = (String) genderSelect.getSelectedItem();
+				String address = addressField.getText();
+				String phone = phoneField.getText();
+
+				boolean hasError = false;
+
 				if (name.isEmpty()) {
 					errorName.setText("Campo obligatorio");
+					hasError = true;
 				} else {
 					errorName.setText(null);
 				}
-				String dni = dniField.getText();
+
 				if (dni.isEmpty()) {
 					errorDni.setText("Campo obligatorio");
+					hasError = true;
+				} else if (dni.length() != 8) {
+					errorDni.setText("El DNI es incorrecto. Asegúrese de ingresar datos reales");
+					dniField.setText(null);
+					hasError = true;
 				} else {
 					errorDni.setText(null);
 				}
-				String gender = (String) genderSelect.getSelectedItem();
-				String address = addressField.getText();
+
 				if (address.isEmpty()) {
 					errorAddress.setText("Campo obligatorio");
+					hasError = true;
 				} else {
 					errorAddress.setText(null);
 				}
-				String phone = phoneField.getText();
 
 				if (phone.isEmpty()) {
 					errorPhone.setText("Campo obligatorio");
-					return;
+					hasError = true;
+				} else if (phone.length() != 9) {
+					errorPhone.setText("El celular es incorrecto. Asegúrese de ingresar datos reales");
+					phoneField.setText(null);
+					hasError = true;
 				} else {
 					errorPhone.setText(null);
 				}
@@ -322,24 +338,16 @@ public class RegisterPatient extends JFrame {
 
 				if (idHistoryMedical == 0) {
 					JOptionPane.showMessageDialog(null, "Error: El ID del historial médico no está establecido");
-					return;
-				}
-
-				if (dni.length() != 8) {
-					JOptionPane.showMessageDialog(null, "El DNI es incorrecto. asegurese de ingresar datos reales");
-					dniField.setText(null);
-					return;
-				}
-
-				if (phone.length() != 9) {
-					JOptionPane.showMessageDialog(null, "El celular es incorrecto. asegurese de ingresar datos reales");
-					phoneField.setText(null);
-					return;
+					hasError = true;
 				}
 
 				if (dniExist(dni)) {
 					JOptionPane.showMessageDialog(null, "El DNI ya ha sido registrado. Por favor, ingrese otro DNI.");
 					dniField.setText(null);
+					hasError = true;
+				}
+
+				if (hasError) {
 					return;
 				}
 
@@ -396,7 +404,6 @@ public class RegisterPatient extends JFrame {
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				String bloodType = (String) bloodTypeSelect.getSelectedItem();
 				String age = ageField.getText();
 				if (age.isEmpty()) {
@@ -406,16 +413,34 @@ public class RegisterPatient extends JFrame {
 				}
 				String description = descriptionField.getText();
 
+				boolean hasError = false;
+
 				if (description.isEmpty()) {
 					descriptionError.setText("Campo obligatorio");
-					return;
+					hasError = true;
 				} else {
 					descriptionError.setText(null);
 				}
 
-				if (age.length() != 2) {
-					JOptionPane.showMessageDialog(null, "La edad solo puede tener 2 digitos");
+				if (age.isEmpty()) {
+					// errorAge.setText("Campo obligatorio");
+					hasError = true;
+				} else if (age.length() > 2) {
 					ageField.setText(null);
+					// errorAge.setText("La edad debe tener como máximo 2 dígitos");
+					hasError = true;
+				} else {
+					try {
+						Integer.parseInt(age);
+						// errorAge.setText(null);
+					} catch (NumberFormatException ex) {
+						ageField.setText(null);
+						// errorAge.setText("La edad debe ser un número válido");
+						hasError = true;
+					}
+				}
+
+				if (hasError) {
 					return;
 				}
 
