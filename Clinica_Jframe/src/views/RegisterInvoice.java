@@ -36,6 +36,7 @@ public class RegisterInvoice extends JFrame {
 	private JTextField totalField;
 	private Connection connect;
 	JComboBox<Object> patientSelect;
+	private JTextField pagoField;
 
 	/**
 	 * Launch the application.
@@ -76,21 +77,21 @@ public class RegisterInvoice extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel("Total:");
 		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_2.setBounds(32, 148, 45, 13);
+		lblNewLabel_2.setBounds(32, 118, 45, 13);
 		contentPane.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_5 = new JLabel("Detalle:");
 		lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblNewLabel_5.setBounds(32, 215, 83, 13);
+		lblNewLabel_5.setBounds(32, 243, 83, 13);
 		contentPane.add(lblNewLabel_5);
 
 		totalField = new JTextField();
-		totalField.setBounds(141, 146, 182, 19);
+		totalField.setBounds(141, 116, 182, 19);
 		contentPane.add(totalField);
 		totalField.setColumns(10);
 
 		JTextPane detailField = new JTextPane();
-		detailField.setBounds(141, 215, 182, 90);
+		detailField.setBounds(141, 243, 182, 90);
 		contentPane.add(detailField);
 
 		JLabel lblNewLabel_6 = new JLabel("");
@@ -110,9 +111,9 @@ public class RegisterInvoice extends JFrame {
 		contentPane.add(patientSelect);
 
 		JLabel subTotalLabel = new JLabel("");
-		subTotalLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		subTotalLabel.setFont(new Font("Arial", Font.BOLD, 9));
-		subTotalLabel.setBounds(240, 175, 83, 13);
+		subTotalLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		subTotalLabel.setFont(new Font("Arial", Font.BOLD, 10));
+		subTotalLabel.setBounds(240, 146, 83, 13);
 		contentPane.add(subTotalLabel);
 
 		JButton startBtn = new JButton("INICIO");
@@ -125,19 +126,35 @@ public class RegisterInvoice extends JFrame {
 			}
 		});
 		startBtn.setFont(new Font("Arial", Font.BOLD, 14));
-		startBtn.setBounds(428, 344, 116, 21);
+		startBtn.setBounds(419, 356, 116, 21);
 		contentPane.add(startBtn);
 
+		JLabel lblNewLabel_2_1 = new JLabel("Pago:");
+		lblNewLabel_2_1.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblNewLabel_2_1.setBounds(32, 203, 45, 13);
+		contentPane.add(lblNewLabel_2_1);
+
+		pagoField = new JTextField();
+		pagoField.setColumns(10);
+		pagoField.setBounds(141, 201, 182, 19);
+		contentPane.add(pagoField);
+
+		JLabel errorPago = new JLabel("");
+		errorPago.setForeground(Color.RED);
+		errorPago.setFont(new Font("Arial", Font.PLAIN, 9));
+		errorPago.setBounds(141, 222, 182, 10);
+		contentPane.add(errorPago);
+
 		JLabel errorDetail = new JLabel("");
+		errorDetail.setForeground(Color.RED);
 		errorDetail.setFont(new Font("Arial", Font.PLAIN, 9));
-		errorDetail.setForeground(new Color(255, 0, 0));
-		errorDetail.setBounds(141, 308, 89, 13);
+		errorDetail.setBounds(141, 332, 182, 10);
 		contentPane.add(errorDetail);
 
 		JLabel errorTotal = new JLabel("");
 		errorTotal.setForeground(new Color(255, 0, 0));
 		errorTotal.setFont(new Font("Arial", Font.PLAIN, 9));
-		errorTotal.setBounds(141, 164, 107, 10);
+		errorTotal.setBounds(141, 142, 182, 10);
 		contentPane.add(errorTotal);
 
 		JButton registerBtn = new JButton("REGISTRO");
@@ -148,6 +165,8 @@ public class RegisterInvoice extends JFrame {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String formattedDate = dateFormat.format(currentDate);
 				String total = totalField.getText();
+				String pago = pagoField.getText();
+				String detail = detailField.getText();
 
 				boolean hasError = false;
 
@@ -158,7 +177,6 @@ public class RegisterInvoice extends JFrame {
 					errorTotal.setText(null);
 				}
 
-				String detail = detailField.getText();
 				if (detail.isEmpty()) {
 					errorDetail.setText("Campo obligatorio");
 					hasError = true;
@@ -166,39 +184,51 @@ public class RegisterInvoice extends JFrame {
 					errorDetail.setText(null);
 				}
 
-				Patient selectedPatient = (Patient) patientSelect.getSelectedItem();
-				int patientId = selectedPatient.getId();
+				if (pago.isEmpty()) {
+					errorPago.setText("Campo obligatorio");
+					hasError = true;
+				} else {
+					errorPago.setText(null);
+				}
 
 				if (hasError) {
 					return;
 				}
 
 				try {
-					String query = "INSERT INTO Invoice (issueDate, total, businessName, ruc, detail, Patient_id) VALUES (?, ?, ?, ?, ?,?)";
+					double totalAmount = Double.parseDouble(total);
+					double pagoAmount = Double.parseDouble(pago);
+
+					double vuelto = pagoAmount - totalAmount;
+
+					Patient selectedPatient = (Patient) patientSelect.getSelectedItem();
+					int patientId = selectedPatient.getId();
+
+					String query = "INSERT INTO Invoice (issueDate, total, businessName, ruc, detail, Patient_id) VALUES (?, ?, ?, ?, ?, ?)";
 					PreparedStatement st = connect.prepareStatement(query);
 					st.setString(1, formattedDate);
-					st.setString(2, total);
+					st.setDouble(2, totalAmount);
 					st.setString(3, "Clinica Maria del Pilar");
 					st.setString(4, "20602477925");
 					st.setString(5, detail);
 					st.setLong(6, patientId);
 					st.executeUpdate();
 
-					JOptionPane.showMessageDialog(null, "Factura registrada correctamente");
+					JOptionPane.showMessageDialog(null, "Factura registrada correctamente - Vuelto de S/" + vuelto);
 
-				} catch (Exception err) {
+				} catch (NumberFormatException | SQLException err) {
 					err.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error en el servidor");
 				}
 			}
 		});
-		registerBtn.setBounds(141, 344, 116, 21);
+		registerBtn.setBounds(141, 356, 116, 21);
 		contentPane.add(registerBtn);
 
 		JLabel igvLabel = new JLabel("");
-		igvLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		igvLabel.setFont(new Font("Arial", Font.BOLD, 9));
-		igvLabel.setBounds(240, 192, 83, 13);
+		igvLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		igvLabel.setFont(new Font("Arial", Font.BOLD, 10));
+		igvLabel.setBounds(240, 163, 83, 13);
 		contentPane.add(igvLabel);
 
 		JButton calculateBtn = new JButton("CALCULAR");
@@ -215,7 +245,7 @@ public class RegisterInvoice extends JFrame {
 				igvLabel.setText("IGV: " + igvDecimal);
 			}
 		});
-		calculateBtn.setBounds(141, 175, 89, 19);
+		calculateBtn.setBounds(141, 157, 89, 19);
 		contentPane.add(calculateBtn);
 	}
 

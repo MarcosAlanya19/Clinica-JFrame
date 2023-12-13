@@ -35,7 +35,6 @@ public class RegisterMedical extends JFrame {
 	private JTextField nameField;
 	private JTextField phoneField;
 	private JTextField emailField;
-
 	private JTextField addressField;
 	private JLabel lblEmail;
 

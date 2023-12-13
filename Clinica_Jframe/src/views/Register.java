@@ -161,7 +161,7 @@ public class Register extends JFrame {
 					hasError = true;
 				}
 
-				String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+				String emailRegex = "^[A-Za-z0-9+_.-]+@(gmail\\.com|outlook\\.com|hotmail\\.com)$";
 				Pattern pattern = Pattern.compile(emailRegex);
 				Matcher matcher = pattern.matcher(email);
 
@@ -170,9 +170,7 @@ public class Register extends JFrame {
 					hasError = true;
 				} else {
 					errorEmail.setText(null);
-				}
 
-				if (matcher.matches()) {
 					if (emailExist(email)) {
 						errorEmail.setText("El email ya ha sido registrado. Por favor, ingrese otro email.");
 						hasError = true;
